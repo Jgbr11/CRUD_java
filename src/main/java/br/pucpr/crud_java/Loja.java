@@ -16,6 +16,7 @@ public class Loja {
         this.lojaLogo = lojaLogo;
         this.lojaAndar = lojaAndar;
         this.lojaTipo = lojaTipo;
+
     }
 
     public int getLojaId() {
