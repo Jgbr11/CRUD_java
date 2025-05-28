@@ -1,14 +1,27 @@
 package br.pucpr.crud_java;
 
 public class Boleto {
-    private int id;
+    private static int id;
     private int numeroDocumento;
     private double valor;
     private String vencimento;
-    private String pagadorNome;
+    private Locatario pagador;
+    private final String cedente;
     private String banco;
     private String codBarras;
     private String linhaDigitavel;
+
+    public Boleto() {
+        id += 1;
+        this.numeroDocumento = 0;
+        this.valor = 0.0;
+        this.vencimento = "";
+        this.pagador = null;
+        this.cedente = "Tijucas Open";
+        this.banco = "Banco do Brasil";
+        this.codBarras = "";
+        this.linhaDigitavel = "";
+    }
 
     public int getId() {
         return id;
@@ -42,12 +55,12 @@ public class Boleto {
         this.vencimento = vencimento;
     }
 
-    public String getPagadorNome() {
-        return pagadorNome;
+    public Locatario getPagador() {
+        return pagador;
     }
 
-    public void setPagadorNome(String pagadorNome) {
-        this.pagadorNome = pagadorNome;
+    public void setPagadorNome(Locatario pagador) {
+        this.pagador = pagador;
     }
 
     public String getBanco() {
