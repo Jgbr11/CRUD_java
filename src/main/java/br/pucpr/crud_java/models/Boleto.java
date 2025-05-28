@@ -1,7 +1,14 @@
-package br.pucpr.crud_java;
+package br.pucpr.crud_java.models;
 
-public class Boleto {
-    private static int id;
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Boleto implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private static int contador = 0;
+    private int id;
     private int numeroDocumento;
     private double valor;
     private String vencimento;
@@ -12,7 +19,7 @@ public class Boleto {
     private String linhaDigitavel;
 
     public Boleto() {
-        id += 1;
+        this.id = ++contador;
         this.numeroDocumento = 0;
         this.valor = 0.0;
         this.vencimento = "";
@@ -21,6 +28,11 @@ public class Boleto {
         this.banco = "Banco do Brasil";
         this.codBarras = "";
         this.linhaDigitavel = "";
+    }
+
+    @Override
+    public String toString(){
+        return "ID: " + this.id + "\nCedente: " + this.cedente + "\nBanco: " + this.banco;
     }
 
     public int getId() {

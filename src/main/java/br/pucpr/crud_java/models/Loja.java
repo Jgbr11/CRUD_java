@@ -1,4 +1,4 @@
-package br.pucpr.crud_java;
+package br.pucpr.crud_java.models;
 
 public class Loja {
     private int lojaId;
