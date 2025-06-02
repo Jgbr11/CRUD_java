@@ -1,13 +1,18 @@
 package br.pucpr.crud_java.models;
 
-public class Loja {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Loja implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private int lojaId;
     private String lojaNome;
     private String lojaTelefone;
     private String lojaLogo;
     private String lojaAndar;
     private String lojaTipo;
-
 
     public Loja(int lojaId, String lojaNome, String lojaTelefone, String lojaLogo, String lojaAndar, String lojaTipo) {
         this.lojaId = lojaId;
@@ -16,8 +21,8 @@ public class Loja {
         this.lojaLogo = lojaLogo;
         this.lojaAndar = lojaAndar;
         this.lojaTipo = lojaTipo;
-
     }
+
 
     public int getLojaId() {
         return lojaId;
