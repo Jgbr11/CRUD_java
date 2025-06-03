@@ -74,4 +74,24 @@ public class ArquivoLocatario {
         System.out.println("CNPJ não encontrado. Nenhuma alteração feita.");
     }
 
+
+    public static void removerLocatario(String cnpj) {
+        ArrayList<Locatario> locatarios = lerLista();
+        boolean removido = false;
+
+        for (Locatario loc : locatarios) {
+            if (cnpj != null && cnpj.equals(loc.getLocatario_cnpj())) {
+                locatarios.remove(loc);
+                removido = true;
+                break;
+            }
+
+        }
+        if (removido) {
+            salvarLista(locatarios);
+            System.out.println("Locatário removido com sucesso!");
+        } else {
+            System.out.println("CNPJ não encontrado. Nenhuma remoção feita.");
+        }
+    }
 }

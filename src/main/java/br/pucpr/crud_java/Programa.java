@@ -30,7 +30,6 @@ public class Programa {
         ArquivoLocatario.editarLocatario("12838494838", "Coxudao", "41984838444", "coritiba@gmail.com");
 
 
-
         ArrayList<Boleto> boletos = ArquivoBoleto.lerLista();
         ArrayList<Loja> lojas = ArquivoLoja.lerLista();
         ArrayList<Locatario> locatarios = ArquivoLocatario.lerLista();
