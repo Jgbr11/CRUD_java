@@ -1,5 +1,6 @@
 package br.pucpr.crud_java.persistencias;
 
+import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.models.Loja;
 import java.io.*;
 import java.util.ArrayList;
@@ -45,8 +46,18 @@ public class ArquivoLoja {
 
     public static void adicionarLoja(Loja novaLoja) {
         ArrayList<Loja> lojas = lerLista();
+
+        for (Loja l : lojas) {
+            if (l.getLojaId() == (novaLoja.getLojaId())) {
+                System.out.println("Loja já existente! Loja não cadastrada!");
+                return;
+            }
+        }
+
         lojas.add(novaLoja);
         salvarLista(lojas);
 
     }
+
+
 }

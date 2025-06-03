@@ -7,8 +7,8 @@ public class Boleto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static int contador = 0;
-    private int id;
+    private static int contador = 1;
+    private int idBoleto;
     private int numeroDocumento;
     private double valor;
     private String vencimento;
@@ -19,7 +19,7 @@ public class Boleto implements Serializable {
     private String linhaDigitavel;
 
     public Boleto() {
-        this.id = ++contador;
+        this.idBoleto = ++contador;
         this.numeroDocumento = 0;
         this.valor = 0.0;
         this.vencimento = "";
@@ -31,16 +31,18 @@ public class Boleto implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return "ID: " + this.id + "\nCedente: " + this.cedente + "\nBanco: " + this.banco;
+    public String toString() {
+        return "ID: " + this.idBoleto +
+                "\nCedente: " + this.cedente +
+                "\nBanco: " + this.banco + "\n";
     }
 
     public int getId() {
-        return id;
+        return idBoleto;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.idBoleto = id;
     }
 
     public int getNumeroDocumento() {
