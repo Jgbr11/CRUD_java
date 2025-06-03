@@ -23,6 +23,16 @@ public class Loja implements Serializable {
         this.lojaTipo = lojaTipo;
     }
 
+    @Override
+    public String toString() {
+        return "ID: " + this.lojaId +
+                "\nNome: " + this.lojaNome +
+                "\nTelefone: " + this.lojaTelefone +
+                "\nLogo: " + this.lojaLogo +
+                "\nAndar: " + this.lojaAndar +
+                "\nTipo: " + this.lojaTipo + "\n";
+    }
+
 
     public int getLojaId() {
         return lojaId;
