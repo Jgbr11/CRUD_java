@@ -8,7 +8,7 @@ public class Locatario implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static int contador = 0;
+    private static int contador = 1;
 
     private int idLocatario;
     //private int logins_id;
@@ -23,6 +23,15 @@ public class Locatario implements Serializable {
         locatario_nome = nome;
         locatario_telefone = telefone;
         locatario_email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + this.idLocatario +
+                "\nNome: " + this.locatario_nome +
+                "\nCNPJ: " + this.locatario_cpj +
+                "\nEmail: " + this.locatario_email +
+                "\nTelefone: " + this.locatario_telefone + "\n";
     }
 
     public int getIdLocatario() {

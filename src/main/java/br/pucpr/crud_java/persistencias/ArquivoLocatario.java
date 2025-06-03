@@ -43,9 +43,20 @@ public class ArquivoLocatario {
         return lista;
     }
 
+
     public static void adicionarLocatario(Locatario novoLocatario) {
         ArrayList<Locatario> locatarios = lerLista();
+
+        // Verifica se já existe um locatário com o mesmo CNPJ
+        for (Locatario loc : locatarios) {
+            if (loc.getLocatario_cpj().equals(novoLocatario.getLocatario_cpj())) {
+                System.out.println("CNPJ já cadastrado. Locatário não adicionado.");
+                return;
+            }
+        }
+
         locatarios.add(novoLocatario);
         salvarLista(locatarios);
     }
+
 }

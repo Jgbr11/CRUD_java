@@ -7,19 +7,20 @@ public class Loja implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+
+    private static int contador = 1;
+
     private int lojaId;
     private String lojaNome;
     private String lojaTelefone;
     private String lojaLogo;
-    private String lojaAndar;
     private String lojaTipo;
 
-    public Loja(int lojaId, String lojaNome, String lojaTelefone, String lojaLogo, String lojaAndar, String lojaTipo) {
-        this.lojaId = lojaId;
+    public Loja(String lojaNome, String lojaTelefone, String lojaLogo, String lojaTipo) {
+        this.lojaId = ++contador;
         this.lojaNome = lojaNome;
         this.lojaTelefone = lojaTelefone;
         this.lojaLogo = lojaLogo;
-        this.lojaAndar = lojaAndar;
         this.lojaTipo = lojaTipo;
     }
 
@@ -29,7 +30,6 @@ public class Loja implements Serializable {
                 "\nNome: " + this.lojaNome +
                 "\nTelefone: " + this.lojaTelefone +
                 "\nLogo: " + this.lojaLogo +
-                "\nAndar: " + this.lojaAndar +
                 "\nTipo: " + this.lojaTipo + "\n";
     }
 
@@ -64,14 +64,6 @@ public class Loja implements Serializable {
 
     public void setLojaLogo(String lojaLogo) {
         this.lojaLogo = lojaLogo;
-    }
-
-    public String getLojaAndar() {
-        return lojaAndar;
-    }
-
-    public void setLojaAndar(String lojaAndar) {
-        this.lojaAndar = lojaAndar;
     }
 
     public String getLojaTipo() {

@@ -1,6 +1,7 @@
 package br.pucpr.crud_java.persistencias;
 
 import br.pucpr.crud_java.models.Boleto;
+import br.pucpr.crud_java.models.Loja;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -45,6 +46,13 @@ public class ArquivoBoleto {
 
     public static void adicionarBoleto(Boleto novoBoleto) {
         ArrayList<Boleto> boletos = lerLista();
+
+        for (Boleto boleto : boletos) {
+            if (novoBoleto.getId() == boleto.getId()){
+                System.out.println("Boleto já existente! Boleto não cadastrado!");
+                return;
+            }
+        }
         boletos.add(novoBoleto);
         salvarLista(boletos);
     }
