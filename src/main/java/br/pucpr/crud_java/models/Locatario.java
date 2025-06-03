@@ -12,14 +12,14 @@ public class Locatario implements Serializable {
 
     private int idLocatario;
     //private int logins_id;
-    private String locatario_cpj;
+    private String locatario_cnpj;
     private String locatario_nome;
     private String locatario_telefone;
     private String locatario_email;
 
     public Locatario(String cnpj, String nome, String telefone, String email) {
         idLocatario = contador++;
-        locatario_cpj = cnpj;
+        locatario_cnpj = cnpj;
         locatario_nome = nome;
         locatario_telefone = telefone;
         locatario_email = email;
@@ -29,7 +29,7 @@ public class Locatario implements Serializable {
     public String toString() {
         return "ID: " + this.idLocatario +
                 "\nNome: " + this.locatario_nome +
-                "\nCNPJ: " + this.locatario_cpj +
+                "\nCNPJ: " + this.locatario_cnpj +
                 "\nEmail: " + this.locatario_email +
                 "\nTelefone: " + this.locatario_telefone + "\n";
     }
@@ -42,12 +42,12 @@ public class Locatario implements Serializable {
         this.idLocatario = idLocatario;
     }
 
-    public String getLocatario_cpj() {
-        return locatario_cpj;
+    public String getLocatario_cnpj() {
+        return locatario_cnpj;
     }
 
-    public void setLocatario_cpj(String locatario_cpj) {
-        this.locatario_cpj = locatario_cpj;
+    public void setLocatario_cnpj(String locatario_cnpj) {
+        this.locatario_cnpj = locatario_cnpj;
     }
 
     public String getLocatario_nome() {

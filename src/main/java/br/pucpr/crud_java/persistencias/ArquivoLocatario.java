@@ -49,7 +49,7 @@ public class ArquivoLocatario {
 
         // Verifica se já existe um locatário com o mesmo CNPJ
         for (Locatario loc : locatarios) {
-            if (loc.getLocatario_cpj().equals(novoLocatario.getLocatario_cpj())) {
+            if (loc.getLocatario_cnpj().equals(novoLocatario.getLocatario_cnpj())) {
                 System.out.println("CNPJ já cadastrado. Locatário não adicionado.");
                 return;
             }
@@ -57,6 +57,21 @@ public class ArquivoLocatario {
 
         locatarios.add(novoLocatario);
         salvarLista(locatarios);
+    }
+
+    public static void editarLocatario(String cnpj, String novo_nome, String novo_telefone, String novo_email) {
+        ArrayList<Locatario> locatarios = lerLista();
+        for (Locatario loc : locatarios) {
+            if (cnpj != null && cnpj.equals(loc.getLocatario_cnpj())) {
+                loc.setLocatario_nome(novo_nome);
+                loc.setLocatario_telefone(novo_telefone);
+                loc.setLocatario_email(novo_email);
+                salvarLista(locatarios);
+                System.out.println("Locatário atualizado com sucesso!");
+                return;
+            }
+        }
+        System.out.println("CNPJ não encontrado. Nenhuma alteração feita.");
     }
 
 }

@@ -27,6 +27,9 @@ public class Programa {
         ArquivoLocatario.adicionarLocatario(empresa1);
         ArquivoLocatario.adicionarLocatario(empresa2);
 
+        ArquivoLocatario.editarLocatario("12838494838", "Coxudao", "41984838444", "coritiba@gmail.com");
+
+
 
         ArrayList<Boleto> boletos = ArquivoBoleto.lerLista();
         ArrayList<Loja> lojas = ArquivoLoja.lerLista();
@@ -52,6 +55,17 @@ public class Programa {
             System.out.println(locatario);
         }
         System.out.println("-----------------------------------------------------------\n\n");
+
+
+
+
+
+        System.out.println("Locatarios no arquivo: \n");
+        for (Locatario locatario : locatarios) {
+            System.out.println(locatario);
+        }
+        System.out.println("-----------------------------------------------------------\n\n");
+
 
     }
 }
