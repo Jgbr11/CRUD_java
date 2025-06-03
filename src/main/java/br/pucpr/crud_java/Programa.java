@@ -22,6 +22,7 @@ public class Programa {
         ArrayList<Boleto> boletos = ArquivoBoleto.lerLista();
         ArrayList<Loja> lojas = ArquivoLoja.lerLista();
 
+
         System.out.println("Boletos no arquivo: ");
         for (Boleto boleto : boletos) {
             System.out.println(boleto);
