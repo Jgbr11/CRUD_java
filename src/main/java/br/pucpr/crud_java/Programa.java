@@ -18,8 +18,8 @@ public class Programa {
         Loja l2 = new Loja("Vivara", "(41) 9845756584", "X", "Joias");
         Locatario empresa1 = new Locatario("12838494838", "CoritibaFC", "41984838444", "coritiba@gmail.com");
         Locatario empresa2 = new Locatario("83748393849", "AhtleticoPR", "4199384738", "athelticopr@gmail.com");
-        Espaco espaco1 = new Espaco(2, 22, true);
-        Espaco espaco2 = new Espaco(1, 24, false);
+        Espaco espaco1 = new Espaco(2, 22);
+        Espaco espaco2 = new Espaco(1, 24);
         System.out.println("\nLogs do Sistema:");
         System.out.println("-----------------------------------------------------------");
 
@@ -29,17 +29,23 @@ public class Programa {
         ArquivoLoja.adicionarLoja(l2);
         ArquivoLocatario.adicionarLocatario(empresa1);
         ArquivoLocatario.adicionarLocatario(empresa2);
+        ArquivoEspaco.adicionarEspaco(espaco1);
+        ArquivoEspaco.adicionarEspaco(espaco2);
 
         ArquivoLocatario.editarLocatario("12838494838", "Coxudao", "41984838444", "coritiba@gmail.com");
         ArquivoLoja.editarLoja(22, "GABRIEL", "(41) 9863327822", "Esporte","XY");
+        ArquivoEspaco.editarEspaco(1, 3, 25);
+        ArquivoEspaco.editarEspaco(4, 4, 28);
 
 
         ArquivoLoja.excluirLoja(2);
+        ArquivoEspaco.excluirEspaco(1);
 
 
         ArrayList<Boleto> boletos = ArquivoBoleto.lerLista();
         ArrayList<Loja> lojas = ArquivoLoja.lerLista();
         ArrayList<Locatario> locatarios = ArquivoLocatario.lerLista();
+        ArrayList<Espaco> espacos = ArquivoEspaco.lerLista();
 
         System.out.println("-----------------------------------------------------------\n\n");
 
@@ -59,6 +65,12 @@ public class Programa {
         System.out.println("Locatarios no arquivo: \n");
         for (Locatario locatario : locatarios) {
             System.out.println(locatario);
+        }
+        System.out.println("-----------------------------------------------------------\n\n");
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("Espaços no arquivo: \n");
+        for (Espaco espaco: espacos) {
+            System.out.println(espaco);
         }
         System.out.println("-----------------------------------------------------------\n\n");
 

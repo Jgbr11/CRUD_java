@@ -13,16 +13,15 @@ public class Espaco implements Serializable {
     private double area;
     private boolean espacoStatus;
 
-    public Espaco(int piso, double area, boolean espacoStatus ) {
+    public Espaco(int piso, double area) {
         this.idEspaco = ++contador;
         this.piso = piso;
         this.area = area;
-        this.espacoStatus = espacoStatus;
     }
     @Override
     public String toString() { return " Piso: " + this.piso + " Area: " + this.area; }
 
-    public int getId() {return idEspaco;}
+    public int getIdEspaco() {return idEspaco;}
 
     public void setId(int idEspaco) {this.idEspaco = idEspaco;}
 
