@@ -28,6 +28,10 @@ public class Programa {
         ArquivoLocatario.adicionarLocatario(empresa2);
 
         ArquivoLocatario.editarLocatario("12838494838", "Coxudao", "41984838444", "coritiba@gmail.com");
+        ArquivoLoja.editarLoja(22, "GABRIEL", "(41) 9863327822", "Esporte","XY");
+
+
+        ArquivoLoja.excluirLoja(2);
 
 
         ArrayList<Boleto> boletos = ArquivoBoleto.lerLista();

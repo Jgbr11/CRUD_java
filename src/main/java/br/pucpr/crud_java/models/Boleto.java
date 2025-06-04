@@ -10,20 +10,19 @@ public class Boleto implements Serializable {
     private static int contador = 1;
     private int idBoleto;
     private int numeroDocumento;
-    private double valor;
+    private final double valor;
     private String vencimento;
-    private Locatario pagador;
     private final String cedente;
-    private String banco;
+    private final String banco;
     private String codBarras;
     private String linhaDigitavel;
+    private Contrato contrato;
 
     public Boleto() {
         this.idBoleto = ++contador;
         this.numeroDocumento = 0;
-        this.valor = 0.0;
+        this.valor = 3000;
         this.vencimento = "";
-        this.pagador = null;
         this.cedente = "Tijucas Open";
         this.banco = "Banco do Brasil";
         this.codBarras = "";
@@ -33,15 +32,21 @@ public class Boleto implements Serializable {
     @Override
     public String toString() {
         return "ID: " + this.idBoleto +
+                "\nNúmero do Documento: " + this.numeroDocumento +
+                "\nValor: R$" + this.valor +
+                "\nVencimento: " + this.vencimento +
                 "\nCedente: " + this.cedente +
-                "\nBanco: " + this.banco + "\n";
+                "\nBanco: " + this.banco +
+                "\nCódigo de barras: " + this.codBarras +
+                "\nLinha digitável: " + this.linhaDigitavel +
+                "\n";
     }
 
-    public int getId() {
+    public int getIdBoleto() {
         return idBoleto;
     }
 
-    public void setId(int id) {
+    public void setIdBoleto(int id) {
         this.idBoleto = id;
     }
 
@@ -57,10 +62,6 @@ public class Boleto implements Serializable {
         return valor;
     }
 
-    public void setValor(double valor) {
-        this.valor = valor;
-    }
-
     public String getVencimento() {
         return vencimento;
     }
@@ -69,20 +70,8 @@ public class Boleto implements Serializable {
         this.vencimento = vencimento;
     }
 
-    public Locatario getPagador() {
-        return pagador;
-    }
-
-    public void setPagadorNome(Locatario pagador) {
-        this.pagador = pagador;
-    }
-
     public String getBanco() {
         return banco;
-    }
-
-    public void setBanco(String banco) {
-        this.banco = banco;
     }
 
     public String getCodBarras() {
@@ -100,4 +89,18 @@ public class Boleto implements Serializable {
     public void setLinhaDigitavel(String linhaDigitavel) {
         this.linhaDigitavel = linhaDigitavel;
     }
+
+    public Contrato getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(Contrato contrato) {
+        this.contrato = contrato;
+    }
+
+    public String getCedente() {
+        return cedente;
+    }
+
+
 }
