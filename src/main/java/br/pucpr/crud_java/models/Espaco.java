@@ -18,8 +18,9 @@ public class Espaco implements Serializable {
         this.piso = piso;
         this.area = area;
     }
+
     @Override
-    public String toString() { return " Piso: " + this.piso + " Area: " + this.area; }
+    public String toString() { return "ID: " + this.idEspaco + " Piso: " + this.piso + " Area: " + this.area; }
 
     public int getIdEspaco() {return idEspaco;}
 

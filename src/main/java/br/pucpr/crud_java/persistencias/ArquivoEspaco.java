@@ -49,7 +49,7 @@ public class ArquivoEspaco {
         espacos.add(novoEspaco);
         salvarLista(espacos);
     }
-    public static void editarEspaco(int idEspaco, int novoPiso, int novaArea) {
+    public static void editarEspaco(int idEspaco, int novoPiso, double novaArea) {
         ArrayList<Espaco> espacos = lerLista();
         for (Espaco espaco : espacos) {
             if (espaco.getIdEspaco() == idEspaco) {
