@@ -8,7 +8,7 @@ public class Loja implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    private static int contador = 1;
+    private static int contador = 0;
 
     private int lojaId;
     private String lojaNome;
