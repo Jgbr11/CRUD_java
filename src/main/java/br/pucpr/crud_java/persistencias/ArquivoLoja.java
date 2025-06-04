@@ -54,9 +54,41 @@ public class ArquivoLoja {
             }
         }
 
+
+
         lojas.add(novaLoja);
         salvarLista(lojas);
 
+    }
+
+    public static void editarLoja(int lojaId, String novoNome, String novoTelefone, String novoTipo, String novoLogo) {
+        ArrayList<Loja> lojas = lerLista();
+        for (Loja l : lojas) {
+            if (l.getLojaId() == lojaId) {
+                l.setLojaNome(novoNome);
+                l.setLojaTelefone(novoTelefone);
+                l.setLojaTipo(novoTipo);
+                l.setLojaLogo(novoLogo);
+                salvarLista(lojas);
+                System.out.println("Loja atualizada com sucesso!");
+                return;
+            }
+        }
+        System.out.println("O ID da loja não foi encontrado, não foi possível atualizar!");
+
+    }
+
+    public static void excluirLoja(int lojaId) {
+        ArrayList<Loja> lojas = lerLista();
+        for (Loja l : lojas) {
+            if (l.getLojaId() == lojaId) {
+                lojas.remove(l);
+                salvarLista(lojas);
+                System.out.println("Loja removida com sucesso!");
+                return;
+            }
+        }
+        System.out.println("O ID da loja não foi encontrado, não foi possível excluir!");
     }
 
 
