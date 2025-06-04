@@ -1,6 +1,8 @@
 package br.pucpr.crud_java.persistencias;
 
 import br.pucpr.crud_java.models.Boleto;
+import br.pucpr.crud_java.models.Contrato;
+import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.models.Loja;
 
 import java.io.*;
@@ -48,12 +50,43 @@ public class ArquivoBoleto {
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto boleto : boletos) {
-            if (novoBoleto.getId() == boleto.getId()){
-                System.out.println("Boleto já existente! Boleto não cadastrado!");
+            if (novoBoleto.getIdBoleto() == boleto.getIdBoleto()){
+                System.out.println("Boleto já existente!");
                 return;
             }
         }
         boletos.add(novoBoleto);
         salvarLista(boletos);
+    }
+
+    public static void excluirBoleto(int id){
+        ArrayList<Boleto> boletos = lerLista();
+
+        for (Boleto b : boletos){
+            if (b.getIdBoleto() == id){
+                boletos.remove(b);
+                salvarLista(boletos);
+            } else {
+                System.out.println("Boleto não existe!");
+            }
+        }
+    }
+
+    public static void editarBoleto(int id, int numeroDocumento, String vencimento, String codBarras, String linhaDigitavel, Contrato contrato){
+        ArrayList<Boleto> boletos = lerLista();
+
+        for (Boleto b : boletos){
+            if (id > 0 && id == b.getIdBoleto()){
+                b.setNumeroDocumento(numeroDocumento);
+                b.setVencimento(vencimento);
+                b.setCodBarras(codBarras);
+                b.setLinhaDigitavel(linhaDigitavel);
+                b.setContrato(contrato);
+                salvarLista(boletos);
+                System.out.println("Boleto atualizado com sucesso!");
+                return;
+            }
+        System.out.println("Boleto inexistente ou não encontrado");
+        }
     }
 }
