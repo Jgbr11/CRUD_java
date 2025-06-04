@@ -6,6 +6,8 @@ import br.pucpr.crud_java.persistencias.ArquivoBoleto;
 import br.pucpr.crud_java.models.Loja;
 import br.pucpr.crud_java.persistencias.ArquivoLocatario;
 import br.pucpr.crud_java.persistencias.ArquivoLoja;
+import br.pucpr.crud_java.models.Espaco;
+import br.pucpr.crud_java.persistencias.ArquivoEspaco;
 import java.util.ArrayList;
 
 public class Programa {
@@ -16,7 +18,8 @@ public class Programa {
         Loja l2 = new Loja("Vivara", "(41) 9845756584", "X", "Joias");
         Locatario empresa1 = new Locatario("12838494838", "CoritibaFC", "41984838444", "coritiba@gmail.com");
         Locatario empresa2 = new Locatario("83748393849", "AhtleticoPR", "4199384738", "athelticopr@gmail.com");
-
+        Espaco espaco1 = new Espaco(2, 22, true);
+        Espaco espaco2 = new Espaco(1, 24, false);
         System.out.println("\nLogs do Sistema:");
         System.out.println("-----------------------------------------------------------");
 
