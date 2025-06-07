@@ -14,7 +14,6 @@ public class Boleto implements Serializable {
     private String vencimento;
     private final String cedente;
     private final String banco;
-    private String codBarras;
     private String linhaDigitavel;
     private Contrato contrato;
 
@@ -25,7 +24,6 @@ public class Boleto implements Serializable {
         this.vencimento = "";
         this.cedente = "Tijucas Open";
         this.banco = "Banco do Brasil";
-        this.codBarras = "";
         this.linhaDigitavel = "";
     }
 
@@ -37,7 +35,6 @@ public class Boleto implements Serializable {
                 "\nVencimento: " + this.vencimento +
                 "\nCedente: " + this.cedente +
                 "\nBanco: " + this.banco +
-                "\nCódigo de barras: " + this.codBarras +
                 "\nLinha digitável: " + this.linhaDigitavel +
                 "\n";
     }
@@ -72,14 +69,6 @@ public class Boleto implements Serializable {
 
     public String getBanco() {
         return banco;
-    }
-
-    public String getCodBarras() {
-        return codBarras;
-    }
-
-    public void setCodBarras(String codBarras) {
-        this.codBarras = codBarras;
     }
 
     public String getLinhaDigitavel() {

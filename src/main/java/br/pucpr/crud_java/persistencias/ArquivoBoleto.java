@@ -72,14 +72,13 @@ public class ArquivoBoleto {
         }
     }
 
-    public static void editarBoleto(int id, int numeroDocumento, String vencimento, String codBarras, String linhaDigitavel, Contrato contrato){
+    public static void editarBoleto(int id, int numeroDocumento, String vencimento, String linhaDigitavel, Contrato contrato){
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto b : boletos){
             if (id > 0 && id == b.getIdBoleto()){
                 b.setNumeroDocumento(numeroDocumento);
                 b.setVencimento(vencimento);
-                b.setCodBarras(codBarras);
                 b.setLinhaDigitavel(linhaDigitavel);
                 b.setContrato(contrato);
                 salvarLista(boletos);
