@@ -17,10 +17,20 @@ public class Boleto implements Serializable {
     private String linhaDigitavel;
     private Contrato contrato;
 
+    public Boleto(int numeroDocumento, double valor, String vencimento, String cedente, String banco, String linhaDigitavel) {
+        this.idBoleto = contador++;
+        this.numeroDocumento = numeroDocumento;
+        this.valor = valor;
+        this.vencimento = vencimento;
+        this.cedente = cedente;
+        this.banco = banco;
+        this.linhaDigitavel = linhaDigitavel;
+    }
+
     public Boleto() {
-        this.idBoleto = ++contador;
+        this.idBoleto = contador++;
         this.numeroDocumento = 0;
-        this.valor = 3000;
+        this.valor = 0;
         this.vencimento = "";
         this.cedente = "Tijucas Open";
         this.banco = "Banco do Brasil";

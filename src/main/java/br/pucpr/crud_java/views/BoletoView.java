@@ -2,6 +2,9 @@ package br.pucpr.crud_java.views;
 
 import br.pucpr.crud_java.models.Boleto;
 import br.pucpr.crud_java.persistencias.ArquivoBoleto;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -12,9 +15,13 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+import static javafx.collections.FXCollections.observableArrayList;
+
 public class BoletoView {
     private Stage stage;
     private Scene cena;
+
+    private ObservableList<Boleto> boletosObservable = observableArrayList();
 
     public BoletoView(Stage stage) {
         this.stage = stage;
@@ -28,6 +35,7 @@ public class BoletoView {
     private void criarUI() {
         stage.setTitle("Boletos");
         ArrayList<Boleto> boletos = ArquivoBoleto.lerLista();
+        boletosObservable.setAll(boletos);
         String styleBtn = "-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: black; -fx-font-size: 16px;";
 
         BorderPane borderPane = new BorderPane();
@@ -90,20 +98,75 @@ public class BoletoView {
         TextField txtLinhaDig = new TextField();
         txtLinhaDig.setPromptText("Preencha a linha digitável");
 
-        Label labelContrato = new Label("Contrato");
-        TextField txtContrato = new TextField();
-        txtContrato.setPromptText("Digite o ID");
-
         Button btnCad = new Button("Cadastrar");
+        btnCad.setOnAction(e -> {
+            try {
+                    int numDoc = Integer.parseInt(txtNmrDoc.getText());
+                    double valor = Double.parseDouble(txtVal.getText());
+                    String vencimento = txtVenc.getText();
+                    String cedente = txtCedente.getText();
+                    String banco = txtBanco.getText();
+                    String linhaDig = txtLinhaDig.getText();
+
+                    Boleto novoBoleto = new Boleto(numDoc, valor, vencimento, cedente, banco, linhaDig);
+                    ArquivoBoleto.adicionarBoleto(novoBoleto);
+                    boletosObservable.add(novoBoleto);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Cadastro");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Cadastro efetuado com sucesso!");
+                    alert.showAndWait();
+
+                    txtNmrDoc.clear();
+                    txtVal.clear();
+                    txtLinhaDig.clear();
+                } catch (NumberFormatException ex){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erro");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Insira dados válidos!");
+                    alert.showAndWait();
+            }
+        }
+        );
 
         camposBol.getChildren().addAll(separadorNav, labelNmrDoc, txtNmrDoc, labelVal, txtVal, labelVenc, txtVenc, labelCedente,
-                txtCedente, labelBanco, txtBanco, labelLinhaDig, txtLinhaDig, labelContrato, txtContrato, btnCad);
+                txtCedente, labelBanco, txtBanco, labelLinhaDig, txtLinhaDig, btnCad);
 
         TableView<Boleto> boletosTable = new TableView<>();
 
+        TableColumn<Boleto, String> colNmrDoc = new TableColumn<>("Nº Doc");
+        colNmrDoc.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNumeroDocumento())));
+
+        TableColumn<Boleto, String> colValor = new TableColumn<>("Valor");
+        colValor.setCellValueFactory(cellData -> new SimpleStringProperty((String.format("%.2f", cellData.getValue().getValor()))));
+
+        TableColumn<Boleto, String> colData = new TableColumn<>("Vencimento");
+        colData.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVencimento()));
+
+        TableColumn<Boleto, String> colCed = new TableColumn<>("Cedente");
+        colCed.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCedente()));
+
+        TableColumn<Boleto, String> colBanco = new TableColumn<>("Banco");
+        colBanco.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBanco()));
+
+        TableColumn<Boleto, String> colDig = new TableColumn<>("Linha digitável");
+        colDig.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLinhaDigitavel()));
+
+        boletosTable.getColumns().addAll(colNmrDoc, colValor, colData, colCed, colBanco, colDig);
+
+        boletosTable.setItems(boletosObservable);
+
+        boletosTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        boletosTable.setPrefWidth(500);
+        boletosTable.setPrefHeight(400);
+
+        pageContent.getChildren().add(boletosTable);
 
         borderPane.setTop(navBar);
         borderPane.setLeft(camposBol);
+        borderPane.setRight(pageContent);
 
         this.cena = new Scene(borderPane, 800, 500);
         this.stage.setScene(this.cena);
