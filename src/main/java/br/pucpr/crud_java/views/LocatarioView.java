@@ -43,12 +43,18 @@ public class LocatarioView {
 
         Label labelCNPJ = new Label("CNPJ da Empresa");
         TextField txtCNPJ = new TextField();
+        txtCNPJ.setPromptText("Digite o CNPJ");
+        adicionarMascaraCnpj(txtCNPJ);
         Label labelNome = new Label("Nome da Empresa");
         TextField txtNome = new TextField();
+        txtNome.setPromptText("Digite o nome da Empresa");
         Label labelEmail = new Label("Email");
         TextField txtEmail = new TextField();
+        txtEmail.setPromptText("Digite o email da Empresa");
         Label labelTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
+        txtTelefone.setPromptText("(XX) XXXXX-XXXX");
+        adicionarMascaraTelefone(txtTelefone);
         Button btnCadastrar = new Button("Cadastrar Locatário");
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
@@ -140,6 +146,54 @@ public class LocatarioView {
 
         navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;
+    }
+
+
+    private void adicionarMascaraTelefone(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String digitos = newValue.replaceAll("\\D", "");
+            if (digitos.length() > 11) digitos = digitos.substring(0, 11);
+
+            String textoFormatado = digitos;
+            if (digitos.length() > 2) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2);
+            if (digitos.length() > 7) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 7) + "-" + digitos.substring(7);
+            else if (digitos.length() > 6) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 6) + "-" + digitos.substring(6);
+
+            if (!newValue.equals(textoFormatado)) {
+                textField.setText(textoFormatado);
+                textField.positionCaret(textoFormatado.length());
+            }
+        });
+    }
+
+
+    private void adicionarMascaraCnpj(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String digitos = newValue.replaceAll("\\D", "");
+
+            if (digitos.length() > 14) {
+                digitos = digitos.substring(0, 14);
+            }
+
+            String textoFormatado = digitos;
+            if (digitos.length() > 2) {
+                textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2);
+            }
+            if (digitos.length() > 5) {
+                textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2, 5) + "." + digitos.substring(5);
+            }
+            if (digitos.length() > 8) {
+                textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2, 5) + "." + digitos.substring(5, 8) + "/" + digitos.substring(8);
+            }
+            if (digitos.length() > 12) {
+                textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2, 5) + "." + digitos.substring(5, 8) + "/" + digitos.substring(8, 12) + "-" + digitos.substring(12);
+            }
+
+            if (!newValue.equals(textoFormatado)) {
+                textField.setText(textoFormatado);
+                textField.positionCaret(textoFormatado.length());
+            }
+        });
     }
 
 }

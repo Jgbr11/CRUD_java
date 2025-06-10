@@ -64,6 +64,8 @@ public class ContratoView {
         Label labelValorMensal = new Label("Valor Mensal");
         TextField txtValorMensal = new TextField();
         txtValorMensal.setPromptText("Ex: 1500.50");
+        adicionarFiltroApenasNumeros(txtValorMensal);
+
 
         Label labelStatus = new Label("Status do Contrato");
         CheckBox checkStatus = new CheckBox("Ativo");
@@ -211,5 +213,16 @@ public class ContratoView {
         alerta.setHeaderText(null);
         alerta.setContentText(conteudo);
         alerta.showAndWait();
+    }
+
+    private void adicionarFiltroApenasNumeros(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // O regex '\\d*' significa "zero ou mais dígitos".
+            // Se o novo valor não corresponder a isso...
+            if (!newValue.matches("\\d*")) {
+                // ...reverte a mudança, voltando ao valor antigo (que era válido).
+                textField.setText(oldValue);
+            }
+        });
     }
 }
