@@ -1,6 +1,7 @@
 package br.pucpr.crud_java;
 
 import br.pucpr.crud_java.views.BoletoView;
+import br.pucpr.crud_java.views.LojaView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -13,5 +14,11 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception{
         BoletoView boletoView = new BoletoView(stage);
         boletoView.mostrar();
+
+        LojaView lojaView = new LojaView(stage);
+        lojaView.mostrar();
+
     }
+
+
 }

@@ -18,6 +18,18 @@ public class ArquivoLoja {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo));
             oos.writeObject(lojas);
             oos.close();
+
+            if (!lojas.isEmpty()) {
+                int maxId = 0;
+                for (Loja l : lojas) {
+                    if (l.getLojaId() > maxId) {
+                        maxId = l.getLojaId();
+                    }
+                }
+
+                Loja.setContador(maxId);
+            }
+
             System.out.println("Lista de lojas salva com sucesso!");
         } catch (FileNotFoundException e) {
             System.err.println("Erro ao salvar lista de lojas:  " + e.getMessage());
@@ -61,14 +73,13 @@ public class ArquivoLoja {
 
     }
 
-    public static void editarLoja(int lojaId, String novoNome, String novoTelefone, String novoTipo, String novoLogo) {
+    public static void editarLoja(int lojaId, String novoNome, String novoTelefone, String novoTipo) {
         ArrayList<Loja> lojas = lerLista();
         for (Loja l : lojas) {
             if (l.getLojaId() == lojaId) {
                 l.setLojaNome(novoNome);
                 l.setLojaTelefone(novoTelefone);
                 l.setLojaTipo(novoTipo);
-                l.setLojaLogo(novoLogo);
                 salvarLista(lojas);
                 System.out.println("Loja atualizada com sucesso!");
                 return;
