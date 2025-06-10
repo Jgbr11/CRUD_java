@@ -47,7 +47,7 @@ public class ArquivoContrato {
     public static void adicionarContrato(Contrato novoContrato) {
         ArrayList<Contrato> contratos = lerLista();
         for (Contrato c : contratos) {
-            if (c.getIdContrato() == novoContrato.getIdContrato()) {
+            if (novoContrato.equals(c)) {
                 System.out.println("ID do contrato já cadastrado. Contrato não adicionado.");
                 return;
             }
@@ -56,21 +56,21 @@ public class ArquivoContrato {
         salvarLista(contratos);
     }
 
-    public static Contrato buscarContratoPorId(int idContrato) {
+    public static Contrato buscarContratoPorId(Contrato contrato) {
         ArrayList<Contrato> contratos = lerLista();
         for (Contrato c : contratos) {
-            if (c.getIdContrato() == idContrato) {
+            if (contrato.equals(c)) {
                 return c;
             }
         }
         return null;
     }
 
-    public static void removerContrato(int id){
+    public static void removerContrato(Contrato contrato){
         ArrayList<Contrato> contratos = lerLista();
 
-        for (Contrato contrato : contratos){
-            if (contrato.getIdContrato() == id){
+        for (Contrato c : contratos){
+            if (contrato.equals(c)) {
                 contratos.remove(contrato);
                 salvarLista(contratos);
             } else {

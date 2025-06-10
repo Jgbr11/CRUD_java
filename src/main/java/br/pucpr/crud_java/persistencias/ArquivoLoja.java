@@ -18,18 +18,6 @@ public class ArquivoLoja {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo));
             oos.writeObject(lojas);
             oos.close();
-
-            if (!lojas.isEmpty()) {
-                int maxId = 0;
-                for (Loja l : lojas) {
-                    if (l.getLojaId() > maxId) {
-                        maxId = l.getLojaId();
-                    }
-                }
-
-                Loja.setContador(maxId);
-            }
-
             System.out.println("Lista de lojas salva com sucesso!");
         } catch (FileNotFoundException e) {
             System.err.println("Erro ao salvar lista de lojas:  " + e.getMessage());
@@ -60,7 +48,7 @@ public class ArquivoLoja {
         ArrayList<Loja> lojas = lerLista();
 
         for (Loja l : lojas) {
-            if (l.getLojaId() == (novaLoja.getLojaId())) {
+            if (novaLoja.equals(l)) {
                 System.out.println("Loja já existente! Loja não cadastrada!");
                 return;
             }
@@ -73,10 +61,10 @@ public class ArquivoLoja {
 
     }
 
-    public static void editarLoja(int lojaId, String novoNome, String novoTelefone, String novoTipo) {
+    public static void editarLoja(Loja novaloja, String novoNome, String novoTelefone, String novoTipo) {
         ArrayList<Loja> lojas = lerLista();
         for (Loja l : lojas) {
-            if (l.getLojaId() == lojaId) {
+            if (novaloja.equals(l)) {
                 l.setLojaNome(novoNome);
                 l.setLojaTelefone(novoTelefone);
                 l.setLojaTipo(novoTipo);
@@ -89,10 +77,10 @@ public class ArquivoLoja {
 
     }
 
-    public static void removerLoja(int lojaId) {
+    public static void removerLoja(Loja loja) {
         ArrayList<Loja> lojas = lerLista();
         for (Loja l : lojas) {
-            if (l.getLojaId() == lojaId) {
+            if (loja.equals(l)) {
                 lojas.remove(l);
                 salvarLista(lojas);
                 System.out.println("Loja removida com sucesso!");

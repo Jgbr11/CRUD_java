@@ -7,8 +7,6 @@ public class Boleto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static int contador = 1;
-    private int idBoleto;
     private int numeroDocumento;
     private final double valor;
     private String vencimento;
@@ -18,7 +16,6 @@ public class Boleto implements Serializable {
     private Contrato contrato;
 
     public Boleto(int numeroDocumento, double valor, String vencimento, String cedente, String banco, String linhaDigitavel) {
-        this.idBoleto = contador++;
         this.numeroDocumento = numeroDocumento;
         this.valor = valor;
         this.vencimento = vencimento;
@@ -28,7 +25,6 @@ public class Boleto implements Serializable {
     }
 
     public Boleto() {
-        this.idBoleto = contador++;
         this.numeroDocumento = 0;
         this.valor = 0;
         this.vencimento = "";
@@ -39,22 +35,13 @@ public class Boleto implements Serializable {
 
     @Override
     public String toString() {
-        return "ID: " + this.idBoleto +
-                "\nNúmero do Documento: " + this.numeroDocumento +
+        return "Número do Documento: " + this.numeroDocumento +
                 "\nValor: R$" + this.valor +
                 "\nVencimento: " + this.vencimento +
                 "\nCedente: " + this.cedente +
                 "\nBanco: " + this.banco +
                 "\nLinha digitável: " + this.linhaDigitavel +
                 "\n";
-    }
-
-    public int getIdBoleto() {
-        return idBoleto;
-    }
-
-    public void setIdBoleto(int id) {
-        this.idBoleto = id;
     }
 
     public int getNumeroDocumento() {

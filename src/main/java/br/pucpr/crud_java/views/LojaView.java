@@ -110,7 +110,7 @@ public class LojaView {
             confirmacao.setHeaderText("Remover a loja '" + lojaSelecionada.getLojaNome() + "'?");
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
-                    ArquivoLoja.removerLoja(lojaSelecionada.getLojaId()); // Supondo que Loja tenha um getIdLoja()
+                    ArquivoLoja.removerLoja(lojaSelecionada); // Supondo que Loja tenha um getIdLoja()
                     lojasObservable.remove(lojaSelecionada);
                     exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Loja removida.");
                 }
@@ -145,6 +145,7 @@ public class LojaView {
         navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
         String styleBtn = "-fx-background-color: transparent; -fx-font-weight: bold;";
 
+
         Button btnHome = new Button("Home");
         btnHome.setStyle(styleBtn);
         btnHome.setOnAction(e -> new TelaInicial(stage).mostrar());
@@ -159,11 +160,12 @@ public class LojaView {
 
         // Adicione aqui os outros botões quando tiver as telas prontas
         Button btnLojas = new Button("Lojas");
-        btnContratos.setStyle(styleBtn);
+        btnLojas.setStyle(styleBtn);
+        btnLojas.setOnAction(e -> this.mostrar());
 
-        btnContratos.setOnAction(e -> this.mostrar());
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
+
 
         navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;

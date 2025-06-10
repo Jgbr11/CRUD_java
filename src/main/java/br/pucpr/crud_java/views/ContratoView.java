@@ -54,14 +54,6 @@ public class ContratoView {
         painelFormulario.setPrefWidth(250);
 
         // Campos do formulário
-        Label labelEmpresaId = new Label("ID da Empresa");
-        TextField txtEmpresaId = new TextField();
-        txtEmpresaId.setPromptText("Digite o ID da empresa");
-
-        Label labelEspacoId = new Label("ID do Espaço");
-        TextField txtEspacoId = new TextField();
-        txtEspacoId.setPromptText("Digite o ID do espaço");
-
         Label labelNomeEmpresa = new Label("Nome da Empresa");
         TextField txtNomeEmpresa = new TextField();
         txtNomeEmpresa.setPromptText("Digite o nome da empresa");
@@ -81,8 +73,6 @@ public class ContratoView {
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
         painelFormulario.getChildren().addAll(
-                labelEmpresaId, txtEmpresaId,
-                labelEspacoId, txtEspacoId,
                 labelNomeEmpresa, txtNomeEmpresa,
                 labelDataInicio, datePickerInicio,
                 labelValorMensal, txtValorMensal,
@@ -105,8 +95,6 @@ public class ContratoView {
         btnCadastrar.setOnAction(e -> {
             try {
                 // Coleta e valida os dados do formulário
-                int empresaId = Integer.parseInt(txtEmpresaId.getText());
-                int espacoId = Integer.parseInt(txtEspacoId.getText());
                 String nomeEmpresa = txtNomeEmpresa.getText();
                 LocalDate dataInicio = datePickerInicio.getValue();
                 double valorMensal = Double.parseDouble(txtValorMensal.getText());
@@ -117,13 +105,11 @@ public class ContratoView {
                 }
 
                 // Cria e salva o novo contrato
-                Contrato novoContrato = new Contrato(empresaId, espacoId, nomeEmpresa, dataInicio, valorMensal, status);
+                Contrato novoContrato = new Contrato(nomeEmpresa, dataInicio, valorMensal, status);
                 ArquivoContrato.adicionarContrato(novoContrato);
                 contratosObservable.add(novoContrato);
 
                 // Limpa o formulário e exibe sucesso
-                txtEmpresaId.clear();
-                txtEspacoId.clear();
                 txtNomeEmpresa.clear();
                 datePickerInicio.setValue(null);
                 txtValorMensal.clear();
@@ -147,7 +133,7 @@ public class ContratoView {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, "Tem certeza que deseja remover o contrato selecionado?", ButtonType.YES, ButtonType.NO);
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
-                    ArquivoContrato.removerContrato(contratoSelecionado.getIdContrato()); // Supondo que Contrato tenha um getId()
+                    ArquivoContrato.removerContrato(contratoSelecionado); // Supondo que Contrato tenha um getId()
                     contratosObservable.remove(contratoSelecionado);
                     exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Contrato removido com sucesso!");
                 }
@@ -167,12 +153,6 @@ public class ContratoView {
         table.setItems(contratosObservable);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<Contrato, String> colEmpresaId = new TableColumn<>("Empresa ID");
-        colEmpresaId.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getEmpresaid())));
-
-        TableColumn<Contrato, String> colEspacoId = new TableColumn<>("Espaço ID");
-        colEspacoId.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getEspacoid())));
-
         TableColumn<Contrato, String> colNomeEmpresa = new TableColumn<>("Nome Empresa");
         colNomeEmpresa.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNomeLocatario()));
 
@@ -185,7 +165,7 @@ public class ContratoView {
         TableColumn<Contrato, String> colStatus = new TableColumn<>("Status");
         colStatus.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().isAtivo() ? "Ativo" : "Inativo"));
 
-        table.getColumns().addAll(colEmpresaId, colEspacoId, colNomeEmpresa, colDataInicio, colValor, colStatus);
+        table.getColumns().addAll(colNomeEmpresa, colDataInicio, colValor, colStatus);
         return table;
     }
 
@@ -213,6 +193,8 @@ public class ContratoView {
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
+
+
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
 

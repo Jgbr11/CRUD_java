@@ -40,8 +40,8 @@ public class ArquivoEspaco {
     }
     public static void adicionarEspaco(Espaco novoEspaco) {
         ArrayList<Espaco> espacos = lerLista();
-        for (Espaco espaco : espacos) {
-            if (espaco.getIdEspaco() == (novoEspaco.getIdEspaco())) {
+        for (Espaco e : espacos) {
+            if (novoEspaco.equals(e)) {
                 System.out.println("Espaco já existente! Espaço não cadastrado");
                 return;
             }
@@ -49,12 +49,12 @@ public class ArquivoEspaco {
         espacos.add(novoEspaco);
         salvarLista(espacos);
     }
-    public static void editarEspaco(int idEspaco, int novoPiso, double novaArea) {
+    public static void editarEspaco(Espaco novoEspaco, int novoPiso, double novaArea) {
         ArrayList<Espaco> espacos = lerLista();
-        for (Espaco espaco : espacos) {
-            if (espaco.getIdEspaco() == idEspaco) {
-                espaco.setPiso(novoPiso);
-                espaco.setArea(novaArea);
+        for (Espaco e : espacos) {
+            if (novoEspaco.equals(e)) {
+                e.setPiso(novoPiso);
+                e.setArea(novaArea);
                 salvarLista(espacos);
                 System.out.println("Espaço atualizado com sucesso!");
                 return;
@@ -62,11 +62,11 @@ public class ArquivoEspaco {
         }
         System.out.println("ID não encontrado. Nenhuma alteração feita.");
     }
-    public static void excluirEspaco(int idEspaco) {
+    public static void excluirEspaco(Espaco novoEspaco) {
         ArrayList<Espaco> espacos = lerLista();
-        for (Espaco espaco : espacos) {
-            if (espaco.getIdEspaco() == idEspaco) {
-                espacos.remove(espaco);
+        for (Espaco e : espacos) {
+            if (novoEspaco.equals(e)) {
+                espacos.remove(e);
                 salvarLista(espacos);
                 System.out.println("Espaço removido com sucesso!");
                 return;

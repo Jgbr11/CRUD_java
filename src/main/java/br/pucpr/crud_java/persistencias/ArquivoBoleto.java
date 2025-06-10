@@ -2,6 +2,8 @@ package br.pucpr.crud_java.persistencias;
 
 import br.pucpr.crud_java.models.Boleto;
 import br.pucpr.crud_java.models.Contrato;
+import br.pucpr.crud_java.models.Locatario;
+import br.pucpr.crud_java.models.Loja;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class ArquivoBoleto {
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto boleto : boletos) {
-            if (novoBoleto.getIdBoleto() == boleto.getIdBoleto()){
+            if (novoBoleto.getContrato() == boleto.getContrato()){
                 System.out.println("Boleto já existente!");
                 return;
             }
@@ -57,11 +59,10 @@ public class ArquivoBoleto {
         salvarLista(boletos);
     }
 
-    public static void excluirBoleto(int id){
+    public static void excluirBoleto(Boleto boleto){
         ArrayList<Boleto> boletos = lerLista();
-
         for (Boleto b : boletos){
-            if (b.getIdBoleto() == id){
+            if (boleto.equals(b)){
                 boletos.remove(b);
                 salvarLista(boletos);
             } else {
@@ -70,11 +71,11 @@ public class ArquivoBoleto {
         }
     }
 
-    public static void editarBoleto(int id, int numeroDocumento, String vencimento, String linhaDigitavel, String novaLinhaDigitavel, Contrato contrato){
+    public static void editarBoleto(Boleto boleto, int numeroDocumento, String vencimento, String linhaDigitavel, Contrato contrato){
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto b : boletos){
-            if (id > 0 && id == b.getIdBoleto()){
+            if (boleto.equals(b)){
                 b.setNumeroDocumento(numeroDocumento);
                 b.setVencimento(vencimento);
                 b.setLinhaDigitavel(linhaDigitavel);
