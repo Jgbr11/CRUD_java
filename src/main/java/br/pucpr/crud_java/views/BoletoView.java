@@ -1,6 +1,8 @@
 package br.pucpr.crud_java.views;
 
+import br.pucpr.crud_java.TelaInicial;
 import br.pucpr.crud_java.models.Boleto;
+import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.persistencias.ArquivoBoleto;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,7 +23,7 @@ public class BoletoView {
     private Stage stage;
     private Scene cena;
 
-    private ObservableList<Boleto> boletosObservable = observableArrayList();
+    public static ObservableList<Boleto> boletosObservable = observableArrayList();
 
     public BoletoView(Stage stage) {
         this.stage = stage;
@@ -40,99 +42,12 @@ public class BoletoView {
 
         BorderPane borderPane = new BorderPane();
 
-        HBox navBar = new HBox();
-        navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: grey");
-        navBar.setSpacing(30);
-
-        Button btnHome = new Button("Home");
-        Button btnLocatarios = new Button("Locatários");
-        Button btnContratos = new Button("Contratos");
-        Button btnLojas = new Button("Lojas");
-        Button btnEspacos = new Button("Espaços");
-
-        btnHome.setFont(new Font("Montserrat", 18));
-        btnHome.setStyle(styleBtn);
-        btnLocatarios.setFont(new Font("Montserrat", 18));
-        btnLocatarios.setStyle(styleBtn);
-        btnContratos.setFont(new Font("Montserrat", 18));
-        btnContratos.setStyle(styleBtn);
-        btnLojas.setFont(new Font("Montserrat", 18));
-        btnLojas.setStyle(styleBtn);
-        btnEspacos.setFont(new Font("Montserrat", 18));
-        btnEspacos.setStyle(styleBtn);
-
-        navBar.getChildren().add(btnHome);
-        navBar.getChildren().add(btnLocatarios);
-        navBar.getChildren().add(btnContratos);
-        navBar.getChildren().add(btnLojas);
-        navBar.getChildren().add(btnEspacos);
+        HBox navBar = criarMenuNavegacao();
 
         Separator separadorNav = new Separator();
 
         HBox pageContent = new HBox();
-        VBox camposBol = new VBox();
-        camposBol.setStyle("-fx-padding: 10;");
-        camposBol.setSpacing(5);
 
-        Label labelNmrDoc = new Label("Número do Documento");
-        TextField txtNmrDoc = new TextField();
-        txtNmrDoc.setPromptText("Digite o nº");
-
-        Label labelVal = new Label("Valor");
-        TextField txtVal = new TextField();
-        txtVal.setPromptText("Digite o valor");
-
-        Label labelVenc = new Label("Data de vencimento");
-        TextField txtVenc = new TextField("18/06/2026");
-        txtVenc.setEditable(false);
-
-        Label labelCedente = new Label("Cedente");
-        TextField txtCedente = new TextField("Tijucas Open");
-        txtCedente.setEditable(false);
-
-        Label labelBanco = new Label("Banco");
-        TextField txtBanco = new TextField("Banco do Brasil");
-        txtBanco.setEditable(false);
-
-        Label labelLinhaDig = new Label("Linha digitável");
-        TextField txtLinhaDig = new TextField();
-        txtLinhaDig.setPromptText("Preencha a linha digitável");
-
-        Button btnCad = new Button("Cadastrar");
-        btnCad.setOnAction(e -> {
-            try {
-                    int numDoc = Integer.parseInt(txtNmrDoc.getText());
-                    double valor = Double.parseDouble(txtVal.getText());
-                    String vencimento = txtVenc.getText();
-                    String cedente = txtCedente.getText();
-                    String banco = txtBanco.getText();
-                    String linhaDig = txtLinhaDig.getText();
-
-                    Boleto novoBoleto = new Boleto(numDoc, valor, vencimento, cedente, banco, linhaDig);
-                    ArquivoBoleto.adicionarBoleto(novoBoleto);
-                    boletosObservable.add(novoBoleto);
-
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Cadastro");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Cadastro efetuado com sucesso!");
-                    alert.showAndWait();
-
-                    txtNmrDoc.clear();
-                    txtVal.clear();
-                    txtLinhaDig.clear();
-                } catch (NumberFormatException ex){
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Insira dados válidos!");
-                    alert.showAndWait();
-            }
-        }
-        );
-
-        camposBol.getChildren().addAll(separadorNav, labelNmrDoc, txtNmrDoc, labelVal, txtVal, labelVenc, txtVenc, labelCedente,
-                txtCedente, labelBanco, txtBanco, labelLinhaDig, txtLinhaDig, btnCad);
 
         TableView<Boleto> boletosTable = new TableView<>();
 
@@ -159,18 +74,68 @@ public class BoletoView {
         boletosTable.setItems(boletosObservable);
 
         boletosTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        boletosTable.setPrefWidth(500);
-        boletosTable.setPrefHeight(400);
 
         pageContent.getChildren().add(boletosTable);
 
         borderPane.setTop(navBar);
-        borderPane.setLeft(camposBol);
-        borderPane.setRight(pageContent);
+        borderPane.setBottom(pageContent);
 
         this.cena = new Scene(borderPane, 800, 500);
         this.stage.setScene(this.cena);
-
     }
+
+    private TableView<Locatario> criarTabelaLocatarios() {
+        TableView<Locatario> table = new TableView<>(boletosObservable);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<Locatario, String> colCNPJ = new TableColumn<>("CNPJ");
+        colCNPJ.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_cnpj()));
+
+        TableColumn<Locatario, String> colNome = new TableColumn<>("Nome");
+        colNome.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_nome()));
+
+        TableColumn<Locatario, String> colEmail = new TableColumn<>("Email");
+        colEmail.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_email()));
+
+        TableColumn<Locatario, String> colTelefone = new TableColumn<>("Telefone");
+        colTelefone.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_telefone()));
+
+        table.getColumns().addAll(colCNPJ, colNome, colEmail, colTelefone);
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        return table;
+    }
+
+    private HBox criarMenuNavegacao() {
+        HBox navBar = new HBox(15);
+        navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
+        String styleBtn = "-fx-background-color: transparent; -fx-font-weight: bold;";
+        Button btnHome = new Button("Home");
+        btnHome.setStyle(styleBtn);
+        btnHome.setOnAction(e -> new TelaInicial(stage).mostrar());
+
+        Button btnLocatarios = new Button("Locatários");
+        btnLocatarios.setStyle(styleBtn);
+        btnLocatarios.setOnAction(e -> this.mostrar());
+
+        Button btnBoletos = new Button("Boletos");
+        btnBoletos.setStyle(styleBtn);
+        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
+
+        Button btnContratos = new Button("Contratos");
+        btnContratos.setStyle(styleBtn);
+        btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
+
+        // Adicione aqui os outros botões quando tiver as telas prontas
+        Button btnLojas = new Button("Lojas");
+        btnLojas.setStyle(styleBtn);
+        btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
+        Button btnEspacos = new Button("Espaços");
+        btnEspacos.setStyle(styleBtn);
+
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas, btnEspacos);
+        return navBar;
+    }
+
+}
 
 }
