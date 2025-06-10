@@ -1,36 +1,35 @@
 package br.pucpr.crud_java.models;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Contrato implements Serializable{
     @Serial
     private static final long serialVersionUID = 1L;
 
+
+    private int contador = 1;
     private int idContrato;
     private int empresaid;
     private int espacoid;
     private String nomeLocatario;
-    private String dataInicio;
+    private LocalDate dataInicio;
     private double valorMensal;
-    private boolean ContratoStatus;
+    private boolean contratoStatus;
 
-    public Contrato(int idContrato, int empresaid, int  espacoid, String nomeLocatario, String dataInicio, double valorMensal, boolean ContratoStatus) {
-        this.idContrato = idContrato;
+    public Contrato(int empresaid, int  espacoid, String nomeLocatario, LocalDate dataInicio, double valorMensal, boolean ContratoStatus) {
+        this.idContrato = contador++;
         this.empresaid = empresaid;
         this.espacoid = espacoid;
         this.nomeLocatario = nomeLocatario;
         this.dataInicio = dataInicio;
         this.valorMensal = valorMensal;
-        this.ContratoStatus = ContratoStatus;
+        this.contratoStatus = ContratoStatus;
     }
 
-    public int getIdContrato() {
-        return idContrato;
-    }
+    public int getIdContrato() {return idContrato;}
 
-    public void setIdContrato(int idContrato) {
-        this.idContrato = idContrato;
-    }
+    public void setIdContrato(int idContrato) {this.idContrato = idContrato;}
 
     public int getEmpresaid() {
         return empresaid;
@@ -56,11 +55,11 @@ public class Contrato implements Serializable{
         this.nomeLocatario = nomeLocatario;
     }
 
-    public String getDataInicio() {
+    public LocalDate getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(String dataInicio) {
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
 
@@ -73,10 +72,14 @@ public class Contrato implements Serializable{
     }
 
     public boolean isContratoStatus() {
-        return ContratoStatus;
+        return contratoStatus;
     }
 
     public void setContratoStatus(boolean contratoStatus) {
-        ContratoStatus = contratoStatus;
+        contratoStatus = contratoStatus;
+    }
+
+    public boolean isAtivo() {
+        return contratoStatus;
     }
 }

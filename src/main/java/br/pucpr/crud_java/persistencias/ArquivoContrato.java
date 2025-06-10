@@ -1,5 +1,6 @@
 package br.pucpr.crud_java.persistencias;
 
+import br.pucpr.crud_java.models.Boleto;
 import br.pucpr.crud_java.models.Contrato;
 import java.io.*;
 import java.util.ArrayList;
@@ -63,6 +64,19 @@ public class ArquivoContrato {
             }
         }
         return null;
+    }
+
+    public static void removerContrato(int id){
+        ArrayList<Contrato> contratos = lerLista();
+
+        for (Contrato contrato : contratos){
+            if (contrato.getIdContrato() == id){
+                contratos.remove(contrato);
+                salvarLista(contratos);
+            } else {
+                System.out.println("Contrato não existe!");
+            }
+        }
     }
 
 }

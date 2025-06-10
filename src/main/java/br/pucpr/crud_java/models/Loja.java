@@ -13,14 +13,12 @@ public class Loja implements Serializable {
     private int lojaId;
     private String lojaNome;
     private String lojaTelefone;
-    private String lojaLogo;
     private String lojaTipo;
 
-    public Loja(String lojaNome, String lojaTelefone, String lojaLogo, String lojaTipo) {
+    public Loja(String lojaNome, String lojaTelefone, String lojaTipo) {
         this.lojaId = ++contador;
         this.lojaNome = lojaNome;
         this.lojaTelefone = lojaTelefone;
-        this.lojaLogo = lojaLogo;
         this.lojaTipo = lojaTipo;
     }
 
@@ -29,7 +27,6 @@ public class Loja implements Serializable {
         return "ID: " + this.lojaId +
                 "\nNome: " + this.lojaNome +
                 "\nTelefone: " + this.lojaTelefone +
-                "\nLogo: " + this.lojaLogo +
                 "\nTipo: " + this.lojaTipo + "\n";
     }
 
@@ -58,12 +55,8 @@ public class Loja implements Serializable {
         this.lojaTelefone = lojaTelefone;
     }
 
-    public String getLojaLogo() {
-        return lojaLogo;
-    }
-
-    public void setLojaLogo(String lojaLogo) {
-        this.lojaLogo = lojaLogo;
+    public static void setContador(int contador) {
+        Loja.contador = contador;
     }
 
     public String getLojaTipo() {

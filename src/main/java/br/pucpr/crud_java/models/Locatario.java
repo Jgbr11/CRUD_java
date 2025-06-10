@@ -17,7 +17,7 @@ public class Locatario implements Serializable {
     private String locatario_telefone;
     private String locatario_email;
 
-    public Locatario(String cnpj, String nome, String telefone, String email) {
+    public Locatario(String cnpj, String nome, String email, String telefone) {
         idLocatario = contador++;
         locatario_cnpj = cnpj;
         locatario_nome = nome;

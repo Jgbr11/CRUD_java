@@ -11,7 +11,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
-        BoletoView boletoView = new BoletoView(stage);
-        boletoView.mostrar();
+        TelaInicial telaInicial = new TelaInicial(stage);
+        telaInicial.mostrar();
     }
 }
