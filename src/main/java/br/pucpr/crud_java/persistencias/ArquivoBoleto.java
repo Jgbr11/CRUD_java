@@ -2,8 +2,6 @@ package br.pucpr.crud_java.persistencias;
 
 import br.pucpr.crud_java.models.Boleto;
 import br.pucpr.crud_java.models.Contrato;
-import br.pucpr.crud_java.models.Locatario;
-import br.pucpr.crud_java.models.Loja;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -72,7 +70,7 @@ public class ArquivoBoleto {
         }
     }
 
-    public static void editarBoleto(int id, int numeroDocumento, String vencimento, String linhaDigitavel, Contrato contrato){
+    public static void editarBoleto(int id, int numeroDocumento, String vencimento, String linhaDigitavel, String novaLinhaDigitavel, Contrato contrato){
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto b : boletos){

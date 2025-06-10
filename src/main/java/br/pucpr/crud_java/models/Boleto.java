@@ -100,6 +100,4 @@ public class Boleto implements Serializable {
     public String getCedente() {
         return cedente;
     }
-
-
 }
