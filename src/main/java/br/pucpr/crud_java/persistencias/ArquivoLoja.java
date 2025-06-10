@@ -89,7 +89,7 @@ public class ArquivoLoja {
 
     }
 
-    public static void excluirLoja(int lojaId) {
+    public static void removerLoja(int lojaId) {
         ArrayList<Loja> lojas = lerLista();
         for (Loja l : lojas) {
             if (l.getLojaId() == lojaId) {

@@ -1,27 +1,23 @@
 package br.pucpr.crud_java.views;
 
+import br.pucpr.crud_java.TelaInicial;
 import br.pucpr.crud_java.models.Loja;
 import br.pucpr.crud_java.persistencias.ArquivoLoja;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;      //  lista que atualiza a tela sozinha quando ela alterada.
-import javafx.scene.Scene;                     // define o conteúdo que vai dentro da janela.
-import javafx.scene.control.*;                 // puxa os componentes como botões, textos, tabelas, etc.
-import javafx.scene.layout.BorderPane;         // organiza a tela em 5 áreas (centro, topo, direita, etc.).
-import javafx.scene.layout.HBox;               // organiza os itens um do lado do outro (em linha).
-import javafx.scene.layout.VBox;               // Empilha os itens um em cima do outro (em coluna).
-import javafx.scene.text.Font;                 // Fonte
-import javafx.stage.Stage;                     // janela principal do programa
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import java.util.ArrayList;
 
-import static javafx.collections.FXCollections.observableArrayList;
-
 public class LojaView {
-    private Stage stage;
-    private Scene cena;
 
-    private ObservableList<Loja> lojasObservable = observableArrayList();
+    private Stage stage;
+    private ObservableList<Loja> lojasObservable = FXCollections.observableArrayList();
 
     public LojaView(Stage stage) {
         this.stage = stage;
@@ -33,46 +29,20 @@ public class LojaView {
     }
 
     private void criarUI() {
-        stage.setTitle("Lojas");
-        ArrayList<Loja> lojas = ArquivoLoja.lerLista();
-        lojasObservable.setAll(lojas);
-        String styleBtn = "-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: black; -fx-font-size: 16px;";
+        stage.setTitle("Gestão de Lojas");
+        lojasObservable.setAll(ArquivoLoja.lerLista());
 
         BorderPane borderPane = new BorderPane();
+        borderPane.setStyle("-fx-padding: 10;");
 
-        HBox navBar = new HBox();
-        navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: grey");
-        navBar.setSpacing(30);
+        // --- MENU DE NAVEGAÇÃO ---
+        HBox navBar = criarMenuNavegacao();
+        borderPane.setTop(navBar);
 
-        Button btnHome = new Button("Home");
-        Button btnLocatarios = new Button("Locatários");
-        Button btnContratos = new Button("Contratos");
-        Button btnBoletos = new Button("Boletos");
-        Button btnEspacos = new Button("Espaços");
-
-        btnHome.setFont(new Font("Montserrat", 18));
-        btnHome.setStyle(styleBtn);
-        btnLocatarios.setFont(new Font("Montserrat", 18));
-        btnLocatarios.setStyle(styleBtn);
-        btnContratos.setFont(new Font("Montserrat", 18));
-        btnContratos.setStyle(styleBtn);
-        btnBoletos.setFont(new Font("Montserrat", 18));
-        btnBoletos.setStyle(styleBtn);
-        btnEspacos.setFont(new Font("Montserrat", 18));
-        btnEspacos.setStyle(styleBtn);
-
-        navBar.getChildren().addAll(btnHome);
-        navBar.getChildren().add(btnLocatarios);
-        navBar.getChildren().add(btnContratos);
-        navBar.getChildren().add(btnBoletos);
-        navBar.getChildren().add(btnEspacos);
-
-        Separator separadorNav = new Separator();
-
-        HBox pageContent = new HBox();
-        VBox camposLoja = new VBox();
-        camposLoja.setStyle("-fx-padding: 10;");
-        camposLoja.setSpacing(5);
+        // --- FORMULÁRIO DE CADASTRO (LADO ESQUERDO) ---
+        VBox painelFormulario = new VBox(10);
+        painelFormulario.setStyle("-fx-padding: 10;");
+        painelFormulario.setPrefWidth(250);
 
         Label labelNome = new Label("Nome da Loja");
         TextField txtNome = new TextField();
@@ -80,7 +50,7 @@ public class LojaView {
 
         Label labelTelefone = new Label("Telefone da Loja");
         TextField txtTelefone = new TextField();
-        txtTelefone.setPromptText("Digite o telefone da loja");
+        txtTelefone.setPromptText("(XX) XXXXX-XXXX");
         adicionarMascaraTelefone(txtTelefone);
 
         Label labelTipo = new Label("Tipo da Loja");
@@ -88,120 +58,140 @@ public class LojaView {
         cbTipo.getItems().addAll("Roupas", "Joias", "Esportes", "Restaurantes", "Livros");
         cbTipo.setPromptText("Selecione o tipo");
 
-        Button btnCad = new Button("Cadastrar");
-        btnCad.setOnAction(e -> {
+        Button btnCadastrar = new Button("Cadastrar Loja");
+        btnCadastrar.setMaxWidth(Double.MAX_VALUE);
+
+        painelFormulario.getChildren().addAll(labelNome, txtNome, labelTelefone, txtTelefone, labelTipo, cbTipo, btnCadastrar);
+        borderPane.setLeft(painelFormulario);
+
+        // --- TABELA DE LOJAS (CENTRO) ---
+        VBox painelTabela = new VBox(10);
+        painelTabela.setStyle("-fx-padding: 10;");
+
+        TableView<Loja> lojaTable = criarTabelaLojas();
+        Button btnRemover = new Button("Remover Selecionado");
+
+        painelTabela.getChildren().addAll(lojaTable, btnRemover);
+        borderPane.setCenter(painelTabela);
+
+        // --- AÇÕES DOS BOTÕES ---
+        btnCadastrar.setOnAction(e -> {
             try {
                 String nome = txtNome.getText();
                 String telefone = txtTelefone.getText();
                 String tipo = cbTipo.getValue();
 
-
-                if (nome.isEmpty() || telefone.isEmpty() || tipo == null) {
+                if (nome.isEmpty() || telefone.length() < 14 || tipo == null) { // Validação simples
                     throw new IllegalArgumentException("Preencha todos os campos corretamente!");
                 }
-
 
                 Loja novaLoja = new Loja(nome, telefone, tipo);
                 ArquivoLoja.adicionarLoja(novaLoja);
                 lojasObservable.add(novaLoja);
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Cadastro");
-                alert.setHeaderText(null);
-                alert.setContentText("Loja cadastrada com sucesso!");
-                alert.showAndWait();
-
                 txtNome.clear();
                 txtTelefone.clear();
                 cbTipo.setValue(null);
+                exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Loja cadastrada com sucesso!");
 
             } catch (IllegalArgumentException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro");
-                alert.setHeaderText(null);
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
-            } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro inesperado");
-                alert.setHeaderText(null);
-                alert.setContentText("Ocorreu um erro ao cadastrar a loja.");
-                alert.showAndWait();
-                ex.printStackTrace();
+                exibirAlerta(Alert.AlertType.ERROR, "Erro de Validação", ex.getMessage());
             }
         });
 
+        btnRemover.setOnAction(e -> {
+            Loja lojaSelecionada = lojaTable.getSelectionModel().getSelectedItem();
+            if (lojaSelecionada == null) {
+                exibirAlerta(Alert.AlertType.WARNING, "Nenhuma Seleção", "Por favor, selecione uma loja para remover.");
+                return;
+            }
 
-        camposLoja.getChildren().addAll(separadorNav, labelNome, txtNome,
-                labelTelefone, txtTelefone, labelTipo, cbTipo, btnCad);
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, "Tem certeza?", ButtonType.YES, ButtonType.NO);
+            confirmacao.setHeaderText("Remover a loja '" + lojaSelecionada.getLojaNome() + "'?");
+            confirmacao.showAndWait().ifPresent(resposta -> {
+                if (resposta == ButtonType.YES) {
+                    ArquivoLoja.removerLoja(lojaSelecionada.getLojaId()); // Supondo que Loja tenha um getIdLoja()
+                    lojasObservable.remove(lojaSelecionada);
+                    exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Loja removida.");
+                }
+            });
+        });
 
-        TableView<Loja> lojasTable = new TableView<>();
+        Scene cena = new Scene(borderPane, 900, 600);
+        this.stage.setScene(cena);
+    }
+
+    private TableView<Loja> criarTabelaLojas() {
+        TableView<Loja> table = new TableView<>(lojasObservable);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         TableColumn<Loja, String> colNome = new TableColumn<>("Nome");
-        colNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLojaNome()));
+        colNome.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLojaNome()));
 
         TableColumn<Loja, String> colTel = new TableColumn<>("Telefone");
-        colTel.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLojaTelefone()));
-
+        colTel.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLojaTelefone()));
 
         TableColumn<Loja, String> colTipo = new TableColumn<>("Tipo");
-        colTipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLojaTipo()));
+        colTipo.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLojaTipo()));
 
-        lojasTable.getColumns().addAll(colNome, colTel, colTipo);
-        lojasTable.setItems(lojasObservable);
-        lojasTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        lojasTable.setPrefWidth(500);
-        lojasTable.setPrefHeight(400);
-
-        pageContent.getChildren().add(lojasTable);
-
-        borderPane.setTop(navBar);
-        borderPane.setLeft(camposLoja);
-        borderPane.setRight(pageContent);
-
-        this.cena = new Scene(borderPane, 800, 500);
-        this.stage.setScene(this.cena);
-
+        table.getColumns().addAll(colNome, colTel, colTipo);
+        return table;
     }
 
 
+    private HBox criarMenuNavegacao() {
+        HBox navBar = new HBox(15);
+        navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
+        String styleBtn = "-fx-background-color: transparent; -fx-font-weight: bold;";
 
+        Button btnHome = new Button("Home");
+        btnHome.setStyle(styleBtn);
+        btnHome.setOnAction(e -> new TelaInicial(stage).mostrar());
 
+        Button btnLocatarios = new Button("Locatários");
+        btnLocatarios.setStyle(styleBtn);
+        btnLocatarios.setOnAction(e -> new LocatarioView(stage).mostrar());
 
+        Button btnContratos = new Button("Contratos");
+        btnContratos.setStyle(styleBtn);
+        btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
 
+        // Adicione aqui os outros botões quando tiver as telas prontas
+        Button btnLojas = new Button("Lojas");
+        btnContratos.setStyle(styleBtn);
 
+        btnContratos.setOnAction(e -> this.mostrar());
+        Button btnEspacos = new Button("Espaços");
+        btnEspacos.setStyle(styleBtn);
 
-        private void adicionarMascaraTelefone(TextField textField) {
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
+        return navBar;
+    }
 
-            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+    private void adicionarMascaraTelefone(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String digitos = newValue.replaceAll("\\D", "");
+            if (digitos.length() > 11) digitos = digitos.substring(0, 11);
 
-                String digitos = newValue.replaceAll("\\D", ""); //apenas numeros
+            String textoFormatado = digitos;
+            if (digitos.length() > 2) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2);
+            if (digitos.length() > 7) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 7) + "-" + digitos.substring(7);
+            else if (digitos.length() > 6) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 6) + "-" + digitos.substring(6);
 
+            if (!newValue.equals(textoFormatado)) {
+                textField.setText(textoFormatado);
+                textField.positionCaret(textoFormatado.length());
+            }
+        });
+    }
 
-                if (digitos.length() > 11) {
-                    digitos = digitos.substring(0, 11);
-                }
-
-                String textoFormatado;
-
-
-                if (digitos.length() <= 2) {
-                    textoFormatado = "(" + digitos;
-                } else if (digitos.length() <= 6) {
-                    textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2);
-                } else if (digitos.length() <= 10) {
-                    textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 6) + "-" + digitos.substring(6);
-                } else { // Para 11 dígitos (celular)
-                    textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 7) + "-" + digitos.substring(7);
-                }
-
-
-                if (!newValue.equals(textoFormatado)) {
-
-                    textField.setText(textoFormatado);
-                    textField.positionCaret(textoFormatado.length()); // move o cursor
-                }
-            });
-        }
-
+    private void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(conteudo);
+        alerta.showAndWait();
+    }
 }
+
