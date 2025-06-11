@@ -191,6 +191,10 @@ public class ContratoView {
         btnContratos.setStyle(styleBtn);
         btnContratos.setOnAction(e -> this.mostrar()); // Recarrega a tela atual
 
+        Button btnBoletos = new Button("Boletos");
+        btnBoletos.setStyle(styleBtn);
+        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
+
         // Adicione aqui os outros botões quando tiver as telas prontas
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
@@ -200,7 +204,8 @@ public class ContratoView {
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
 
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos,
+         btnBoletos, btnLojas, btnEspacos);
         return navBar;
     }
 

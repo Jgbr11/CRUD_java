@@ -2,35 +2,27 @@ package br.pucpr.crud_java.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Boleto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private int numeroDocumento;
-    private final double valor;
-    private String vencimento;
-    private final String cedente;
-    private final String banco;
+    private long numeroDocumento;
+    private double valor;
+    private LocalDate vencimento;
+    private String cedente;
+    private String banco;
     private String linhaDigitavel;
-    private Contrato contrato;
 
-    public Boleto(int numeroDocumento, double valor, String vencimento, String cedente, String banco, String linhaDigitavel) {
+    public Boleto(long numeroDocumento, double valor, LocalDate vencimento,
+                  String cedente, String banco, String linhaDigitavel) {
         this.numeroDocumento = numeroDocumento;
         this.valor = valor;
         this.vencimento = vencimento;
         this.cedente = cedente;
         this.banco = banco;
         this.linhaDigitavel = linhaDigitavel;
-    }
-
-    public Boleto() {
-        this.numeroDocumento = 0;
-        this.valor = 0;
-        this.vencimento = "";
-        this.cedente = "Tijucas Open";
-        this.banco = "Banco do Brasil";
-        this.linhaDigitavel = "";
     }
 
     @Override
@@ -44,11 +36,11 @@ public class Boleto implements Serializable {
                 "\n";
     }
 
-    public int getNumeroDocumento() {
+    public long getNumeroDocumento() {
         return numeroDocumento;
     }
 
-    public void setNumeroDocumento(int numeroDocumento) {
+    public void setNumeroDocumento(long numeroDocumento) {
         this.numeroDocumento = numeroDocumento;
     }
 
@@ -56,16 +48,32 @@ public class Boleto implements Serializable {
         return valor;
     }
 
-    public String getVencimento() {
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    public LocalDate getVencimento() {
         return vencimento;
     }
 
-    public void setVencimento(String vencimento) {
+    public void setVencimento(LocalDate vencimento) {
         this.vencimento = vencimento;
+    }
+
+    public String getCedente() {
+        return cedente;
+    }
+
+    public void setCedente(String cedente) {
+        this.cedente = cedente;
     }
 
     public String getBanco() {
         return banco;
+    }
+
+    public void setBanco(String banco) {
+        this.banco = banco;
     }
 
     public String getLinhaDigitavel() {
@@ -74,17 +82,5 @@ public class Boleto implements Serializable {
 
     public void setLinhaDigitavel(String linhaDigitavel) {
         this.linhaDigitavel = linhaDigitavel;
-    }
-
-    public Contrato getContrato() {
-        return contrato;
-    }
-
-    public void setContrato(Contrato contrato) {
-        this.contrato = contrato;
-    }
-
-    public String getCedente() {
-        return cedente;
     }
 }

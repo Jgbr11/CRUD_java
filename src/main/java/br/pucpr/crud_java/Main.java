@@ -1,6 +1,5 @@
 package br.pucpr.crud_java;
 
-import br.pucpr.crud_java.views.BoletoView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

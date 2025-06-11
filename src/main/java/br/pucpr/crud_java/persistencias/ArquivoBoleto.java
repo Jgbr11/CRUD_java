@@ -6,7 +6,9 @@ import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.models.Loja;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ArquivoBoleto {
     private static final String CAMINHO_ARQUIVO = "boletos.dat";
@@ -50,7 +52,7 @@ public class ArquivoBoleto {
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto boleto : boletos) {
-            if (novoBoleto.getContrato() == boleto.getContrato()){
+            if (novoBoleto.getNumeroDocumento() == boleto.getNumeroDocumento()){
                 System.out.println("Boleto já existente!");
                 return;
             }
@@ -59,33 +61,45 @@ public class ArquivoBoleto {
         salvarLista(boletos);
     }
 
-    public static void excluirBoleto(Boleto boleto){
+    public static void removerBoleto(long numeroDocumento){
         ArrayList<Boleto> boletos = lerLista();
+        Boolean boletoRemovido = false;
         for (Boleto b : boletos){
-            if (boleto.equals(b)){
+            if (numeroDocumento >= 0 && b.getNumeroDocumento() ==
+                    numeroDocumento){
                 boletos.remove(b);
-                salvarLista(boletos);
-            } else {
-                System.out.println("Boleto não existe!");
+                boletoRemovido = true;
+                break;
             }
+        }
+        if(boletoRemovido) {
+            salvarLista(boletos);
+            System.out.println("Boleto removido com sucesso!");
+        } else {
+            System.err.println("Boleto não encontrado ou inexistente!");
         }
     }
 
-    public static void editarBoleto(Boleto boleto, int numeroDocumento, String vencimento, String linhaDigitavel, Contrato contrato){
+    public static void editarBoleto(long numeroDocumento,
+                                    double valor,
+                                    LocalDate vencimento, String cedente,
+                                    String banco, String linhaDigitavel){
         ArrayList<Boleto> boletos = lerLista();
 
         for (Boleto b : boletos){
-            if (boleto.equals(b)){
+            if (b.getNumeroDocumento() == numeroDocumento){
                 b.setNumeroDocumento(numeroDocumento);
+                b.setValor(valor);
                 b.setVencimento(vencimento);
+                b.setCedente(cedente);
+                b.setBanco(banco);
                 b.setLinhaDigitavel(linhaDigitavel);
-                b.setContrato(contrato);
                 salvarLista(boletos);
                 System.out.println("Boleto atualizado com sucesso!");
                 return;
             }
-        System.out.println("Boleto inexistente ou não encontrado");
         }
+        System.out.println("Boleto inexistente ou não encontrado");
     }
 
 

@@ -45,6 +45,7 @@ public class EspacoView {
         Button btnHome = new Button("Home");
         Button btnLocatarios = new Button("Locatários");
         Button btnContratos = new Button("Contratos");
+        Button btnBoletos = new Button("Boletos");
         Button btnLojas = new Button("Lojas");
         Button btnEspacos = new Button("Espaços");
 
@@ -54,6 +55,8 @@ public class EspacoView {
         btnLocatarios.setStyle(styleBtn);
         btnContratos.setFont(new Font("Montserrat", 18));
         btnContratos.setStyle(styleBtn);
+        btnBoletos.setFont(new Font("Montserrat", 18));
+        btnBoletos.setStyle(styleBtn);
         btnLojas.setFont(new Font("Montserrat", 18));
         btnLojas.setStyle(styleBtn);
         btnEspacos.setFont(new Font("Montserrat", 18));
@@ -62,6 +65,7 @@ public class EspacoView {
         navBar.getChildren().add(btnHome);
         navBar.getChildren().add(btnLocatarios);
         navBar.getChildren().add(btnContratos);
+        navBar.getChildren().add(btnBoletos);
         navBar.getChildren().add(btnLojas);
         navBar.getChildren().add(btnEspacos);
 
