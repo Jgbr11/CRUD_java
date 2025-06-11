@@ -4,6 +4,7 @@ import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.models.Loja;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ArquivoLoja {
     private static final String CAMINHO_ARQUIVO = "lojas.dat";
@@ -47,6 +48,7 @@ public class ArquivoLoja {
     public static void adicionarLoja(Loja novaLoja) {
         ArrayList<Loja> lojas = lerLista();
 
+
         for (Loja l : lojas) {
             if (novaLoja.equals(l)) {
                 System.out.println("Loja já existente! Loja não cadastrada!");
@@ -77,10 +79,10 @@ public class ArquivoLoja {
 
     }
 
-    public static void removerLoja(Loja loja) {
+    public static void removerLoja(String lojaNome) {
         ArrayList<Loja> lojas = lerLista();
         for (Loja l : lojas) {
-            if (loja.equals(l)) {
+            if (Objects.equals(l.getLojaNome(), lojaNome)) {
                 lojas.remove(l);
                 salvarLista(lojas);
                 System.out.println("Loja removida com sucesso!");

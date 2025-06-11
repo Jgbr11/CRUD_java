@@ -35,11 +35,10 @@ public class LojaView {
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-padding: 10;");
 
-        // --- MENU DE NAVEGAÇÃO ---
         HBox navBar = criarMenuNavegacao();
         borderPane.setTop(navBar);
 
-        // --- FORMULÁRIO DE CADASTRO (LADO ESQUERDO) ---
+
         VBox painelFormulario = new VBox(10);
         painelFormulario.setStyle("-fx-padding: 10;");
         painelFormulario.setPrefWidth(250);
@@ -64,7 +63,7 @@ public class LojaView {
         painelFormulario.getChildren().addAll(labelNome, txtNome, labelTelefone, txtTelefone, labelTipo, cbTipo, btnCadastrar);
         borderPane.setLeft(painelFormulario);
 
-        // --- TABELA DE LOJAS (CENTRO) ---
+
         VBox painelTabela = new VBox(10);
         painelTabela.setStyle("-fx-padding: 10;");
 
@@ -74,15 +73,23 @@ public class LojaView {
         painelTabela.getChildren().addAll(lojaTable, btnRemover);
         borderPane.setCenter(painelTabela);
 
-        // --- AÇÕES DOS BOTÕES ---
+
         btnCadastrar.setOnAction(e -> {
             try {
                 String nome = txtNome.getText();
                 String telefone = txtTelefone.getText();
                 String tipo = cbTipo.getValue();
 
-                if (nome.isEmpty() || telefone.length() < 14 || tipo == null) { // Validação simples
+                if (nome.isEmpty() || telefone.length() < 14 || tipo == null) {
                     throw new IllegalArgumentException("Preencha todos os campos corretamente!");
+                }
+
+                boolean lojaExistente = lojasObservable.stream().anyMatch(
+                        loja -> loja.getLojaNome().equalsIgnoreCase(nome) || loja.getLojaTelefone().equals(telefone)
+                );
+
+                if (lojaExistente) {
+                    throw new IllegalArgumentException("Já existe uma loja com o mesmo nome ou telefone.");
                 }
 
                 Loja novaLoja = new Loja(nome, telefone, tipo);
@@ -109,8 +116,9 @@ public class LojaView {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, "Tem certeza?", ButtonType.YES, ButtonType.NO);
             confirmacao.setHeaderText("Remover a loja '" + lojaSelecionada.getLojaNome() + "'?");
             confirmacao.showAndWait().ifPresent(resposta -> {
+                String lojaNome = lojaSelecionada.getLojaNome();
                 if (resposta == ButtonType.YES) {
-                    ArquivoLoja.removerLoja(lojaSelecionada); // Supondo que Loja tenha um getIdLoja()
+                    ArquivoLoja.removerLoja(lojaNome);
                     lojasObservable.remove(lojaSelecionada);
                     exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Loja removida.");
                 }
@@ -162,7 +170,6 @@ public class LojaView {
         btnBoletos.setStyle(styleBtn);
         btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
 
-        // Adicione aqui os outros botões quando tiver as telas prontas
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> this.mostrar());
@@ -183,7 +190,7 @@ public class LojaView {
             String textoFormatado = digitos;
             if (digitos.length() > 2) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2);
             if (digitos.length() > 7) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 7) + "-" + digitos.substring(7);
-            else if (digitos.length() > 6) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 6) + "-" + digitos.substring(6);
+
 
             if (!newValue.equals(textoFormatado)) {
                 textField.setText(textoFormatado);
