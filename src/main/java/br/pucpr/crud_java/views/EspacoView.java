@@ -4,7 +4,6 @@ import br.pucpr.crud_java.TelaInicial;
 import br.pucpr.crud_java.alerts.Alerts;
 import br.pucpr.crud_java.models.Espaco;
 import br.pucpr.crud_java.persistencias.ArquivoEspaco;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,31 +11,27 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
 public class EspacoView {
     private Stage stage;
-    private Scene scene;
 
     private ObservableList<Espaco> espacosObservable = observableArrayList();
 
     public EspacoView(Stage stage) {
         this.stage = stage;
     }
-    public void mostrar(){
+
+    public void mostrar() {
         criarUI();
         this.stage.show();
     }
+
     private void criarUI() {
         stage.setTitle("Gestão de espaços");
         espacosObservable.setAll(ArquivoEspaco.lerLista());
-
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-padding: 10;");
 
@@ -47,59 +42,55 @@ public class EspacoView {
         painelFormulario.setStyle("-fx-padding: 10;");
         painelFormulario.setPrefWidth(250);
 
-        Label labelID = new Label("ID do espaço");
-        TextField txtID = new TextField();
-        txtID.setPromptText("Digite o id do espaço");
-
-        Label labelArea = new Label("Area do espaço");
+        Label labelArea = new Label("Área do espaço (m²)");
         TextField txtArea = new TextField();
         txtArea.setPromptText("Digite a área do espaço");
 
-        Label labelPiso = new Label("Piso do espaço");
+        Label labelPiso = new Label("Piso do espaço (1 ou 2)");
         TextField txtPiso = new TextField();
         txtPiso.setPromptText("Digite o piso do espaço");
 
         Button btnCad = new Button("Cadastrar Espaço");
         btnCad.setMaxWidth(Double.MAX_VALUE);
 
-        painelFormulario.getChildren().addAll(labelID, txtID, labelArea, txtArea, labelPiso, txtPiso, btnCad);
+        painelFormulario.getChildren().addAll(labelArea, txtArea, labelPiso, txtPiso, btnCad);
         borderPane.setLeft(painelFormulario);
 
         VBox painelTabela = new VBox(10);
         painelTabela.setStyle("-fx-padding: 10;");
 
-        TableView<Espaco> EspacoTable = criarTabelaEspacos();
+        TableView<Espaco> espacoTable = criarTabelaEspacos();
         Button btnRemover = new Button("Remover Selecionado");
 
-        painelTabela.getChildren().addAll(EspacoTable, btnRemover);
+        painelTabela.getChildren().addAll(espacoTable, btnRemover);
         borderPane.setCenter(painelTabela);
 
         btnCad.setOnAction(e -> {
             try {
-                int id = Integer.parseInt(txtID.getText());
                 double area = Double.parseDouble(txtArea.getText());
-                int piso = Integer.parseInt(txtPiso.getText()) ;
+                int piso = Integer.parseInt(txtPiso.getText());
 
-                if (id == 0 || area <= 0 || piso > 2 || piso <1 ){ // Validação simples
-                    throw new IllegalArgumentException("Preencha todos os campos corretamente!");
+                if (area <= 0 || (piso != 1 && piso != 2)) {
+                    throw new IllegalArgumentException("Preencha todos os campos corretamente!\n(Área > 0 e Piso = 1 ou 2)");
                 }
 
-                Espaco novoEspaco = new Espaco(id, piso, area);
-                ArquivoEspaco.adicionarEspaco(novoEspaco);
-                espacosObservable.add(novoEspaco);
+                ArquivoEspaco.adicionarEspaco(piso, area);
 
-                txtID.clear();
+                espacosObservable.setAll(ArquivoEspaco.lerLista());
+
                 txtArea.clear();
                 txtPiso.clear();
-                Alerts.alertInfo("Sucesso", "Espaço cadastrada com sucesso!");
+                Alerts.alertInfo("Sucesso", "Espaço cadastrado com sucesso!");
 
+            } catch (NumberFormatException ex) {
+                Alerts.alertError("Erro de Formato", "Verifique se a área e o piso são números válidos.");
             } catch (IllegalArgumentException ex) {
                 Alerts.alertError("Erro de Validação", ex.getMessage());
             }
         });
 
         btnRemover.setOnAction(e -> {
-            Espaco espacoSelecionado = EspacoTable.getSelectionModel().getSelectedItem();
+            Espaco espacoSelecionado = espacoTable.getSelectionModel().getSelectedItem();
             if (espacoSelecionado == null) {
                 Alerts.alertWarning("Nenhuma Seleção", "Por favor, selecione um espaço para remover.");
                 return;
@@ -110,8 +101,8 @@ public class EspacoView {
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
                     ArquivoEspaco.excluirEspaco(espacoSelecionado.getId());
-                    espacosObservable.remove(espacoSelecionado);
-                    Alerts.alertInfo("Sucesso", "Espaço removida.");
+                    espacosObservable.setAll(ArquivoEspaco.lerLista());
+                    Alerts.alertInfo("Sucesso", "Espaço removido.");
                 }
             });
         });
@@ -128,11 +119,11 @@ public class EspacoView {
         TableColumn<Espaco, String> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getId())));
 
-        TableColumn<Espaco, String> colArea = new TableColumn<>("Area");
-        colArea.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getArea())));
+        TableColumn<Espaco, String> colArea = new TableColumn<>("Área (m²)");
+        colArea.setCellValueFactory(cell -> new SimpleStringProperty(String.format("%.2f", cell.getValue().getArea())));
 
         TableColumn<Espaco, String> colPiso = new TableColumn<>("Piso");
-        colPiso.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf( cell.getValue().getPiso())));
+        colPiso.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getPiso())));
 
         table.getColumns().addAll(colId, colArea, colPiso);
         return table;
@@ -151,29 +142,18 @@ public class EspacoView {
 
         Button btnLocatarios = new Button("Locatários");
         btnLocatarios.setStyle(styleBtn);
-        btnLocatarios.setOnAction(e -> new LocatarioView(stage).mostrar());
 
         Button btnContratos = new Button("Contratos");
         btnContratos.setStyle(styleBtn);
-        btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
 
         Button btnBoletos = new Button("Boletos");
         btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
-        // Adicione aqui os outros botões quando tiver as telas prontas
-        Button btnEspaco = new Button("Espaços");
-        btnEspaco.setStyle(styleBtn);
-        btnEspaco.setOnAction(e -> new EspacoView(stage).mostrar());
 
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
         btnEspacos.setOnAction(e -> this.mostrar());
 
-
-
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnEspaco, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnEspacos);
         return navBar;
     }
 }
-

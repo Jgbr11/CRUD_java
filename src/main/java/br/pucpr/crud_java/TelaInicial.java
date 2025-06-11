@@ -1,4 +1,4 @@
-package br.pucpr.crud_java;
+package br.pucpr.crud_java; // CORRIGIDO: Deve estar no pacote 'views'
 
 import br.pucpr.crud_java.views.*;
 import javafx.geometry.Pos;
@@ -48,16 +48,13 @@ public class TelaInicial {
         this.stage.setScene(cena);
     }
 
-
     private HBox criarMenuNavegacao() {
         HBox navBar = new HBox(15);
-
         navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
         String styleBtn = "-fx-background-color: transparent; -fx-font-weight: bold;";
 
         Button btnHome = new Button("Home");
         btnHome.setStyle(styleBtn);
-
         btnHome.setOnAction(e -> this.mostrar());
 
         Button btnLocatarios = new Button("Locatários");
