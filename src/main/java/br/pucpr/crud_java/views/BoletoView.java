@@ -233,22 +233,3 @@ public class BoletoView {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

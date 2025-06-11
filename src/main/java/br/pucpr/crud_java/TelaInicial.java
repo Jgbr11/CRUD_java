@@ -1,4 +1,4 @@
-package br.pucpr.crud_java; // CORRIGIDO: Deve estar no pacote 'views'
+package br.pucpr.crud_java;
 
 import br.pucpr.crud_java.views.BoletoView;
 import br.pucpr.crud_java.views.ContratoView;
@@ -35,7 +35,6 @@ public class TelaInicial {
         HBox navBar = criarMenuNavegacao();
         borderPane.setTop(navBar);
 
-        // --- Conteúdo Central da Tela Inicial (permanece o mesmo) ---
         VBox centerContent = new VBox(20);
         centerContent.setAlignment(Pos.CENTER);
 
@@ -48,25 +47,20 @@ public class TelaInicial {
         centerContent.getChildren().addAll(welcomeLabel, infoLabel);
         borderPane.setCenter(centerContent);
 
-        // --- Configurando e mostrando a cena ---
         Scene cena = new Scene(borderPane, 900, 600);
         this.stage.setScene(cena);
     }
 
-    /**
-     * Helper para criar a barra de navegação superior.
-     * Este método agora é idêntico ao da ContratoView.
-     */
+
     private HBox criarMenuNavegacao() {
         HBox navBar = new HBox(15);
-        // ESTILO ATUALIZADO: Fundo 'lightgrey' para combinar com a tela de Contratos.
+
         navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
-        // ESTILO ATUALIZADO: Fonte em negrito para os botões.
         String styleBtn = "-fx-background-color: transparent; -fx-font-weight: bold;";
 
         Button btnHome = new Button("Home");
         btnHome.setStyle(styleBtn);
-        // Ação para recarregar a própria tela
+
         btnHome.setOnAction(e -> this.mostrar());
 
         Button btnLocatarios = new Button("Locatários");
@@ -81,7 +75,6 @@ public class TelaInicial {
         btnBoletos.setStyle(styleBtn);
         btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
 
-        // Adicione aqui os outros botões quando tiver as telas prontas
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());

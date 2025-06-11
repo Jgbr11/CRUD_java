@@ -32,11 +32,9 @@ public class LocatarioView {
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-padding: 10;");
 
-        // Usa o menu centralizado
         HBox navBar = criarMenuNavegacao();
         borderPane.setTop(navBar);
 
-        // Formulário de Cadastro
         VBox painelFormulario = new VBox(10);
         painelFormulario.setStyle("-fx-padding: 10;");
         painelFormulario.setPrefWidth(250);
@@ -45,23 +43,26 @@ public class LocatarioView {
         TextField txtCNPJ = new TextField();
         txtCNPJ.setPromptText("Digite o CNPJ");
         adicionarMascaraCnpj(txtCNPJ);
+
         Label labelNome = new Label("Nome da Empresa");
         TextField txtNome = new TextField();
         txtNome.setPromptText("Digite o nome da Empresa");
+
         Label labelEmail = new Label("Email");
         TextField txtEmail = new TextField();
         txtEmail.setPromptText("Digite o email da Empresa");
+
         Label labelTelefone = new Label("Telefone");
         TextField txtTelefone = new TextField();
         txtTelefone.setPromptText("(XX) XXXXX-XXXX");
         adicionarMascaraTelefone(txtTelefone);
+
         Button btnCadastrar = new Button("Cadastrar Locatário");
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
         painelFormulario.getChildren().addAll(labelCNPJ, txtCNPJ, labelNome, txtNome, labelEmail, txtEmail, labelTelefone, txtTelefone, btnCadastrar);
         borderPane.setLeft(painelFormulario);
 
-        // Tabela de Locatários
         VBox painelTabela = new VBox(10);
         painelTabela.setStyle("-fx-padding: 10;");
 
@@ -71,7 +72,6 @@ public class LocatarioView {
         painelTabela.getChildren().addAll(locatarioTable, btnRemover);
         borderPane.setCenter(painelTabela);
 
-        // Ações dos Botões
         btnCadastrar.setOnAction(e -> {
             try {
                 Locatario novoLocatario = new Locatario(txtCNPJ.getText(), txtNome.getText(), txtEmail.getText(), txtTelefone.getText());
@@ -79,7 +79,6 @@ public class LocatarioView {
                 locatariosObservable.add(novoLocatario);
                 txtCNPJ.clear(); txtNome.clear(); txtEmail.clear(); txtTelefone.clear();
             } catch (Exception ex) {
-                // Adicionar um alerta de erro
             }
         });
 
@@ -89,7 +88,6 @@ public class LocatarioView {
                 ArquivoLocatario.removerLocatario(locatarioSelecionado.getLocatario_cnpj());
                 locatariosObservable.remove(locatarioSelecionado);
             } else {
-                // Adicionar um alerta de "nenhum item selecionado"
             }
         });
 
@@ -141,7 +139,6 @@ public class LocatarioView {
         btnBoletos.setStyle(styleBtn);
         btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
 
-        // Adicione aqui os outros botões quando tiver as telas prontas
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
 

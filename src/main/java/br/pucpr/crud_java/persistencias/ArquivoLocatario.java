@@ -9,7 +9,6 @@ public class ArquivoLocatario {
     private static final String CAMINHO_ARQUIVO = "locatarios.dat";
 
     public static void salvarLista(ArrayList<Locatario> locatarios){
-        FileOutputStream f;
         try {
             File arquivo = new File(CAMINHO_ARQUIVO);
             if (!arquivo.exists()){
@@ -47,7 +46,6 @@ public class ArquivoLocatario {
     public static void adicionarLocatario(Locatario novoLocatario) {
         ArrayList<Locatario> locatarios = lerLista();
 
-        // Verifica se já existe um locatário com o mesmo CNPJ
         for (Locatario loc : locatarios) {
             if (loc.getLocatario_cnpj().equals(novoLocatario.getLocatario_cnpj())) {
                 System.out.println("CNPJ já cadastrado. Locatário não adicionado.");
