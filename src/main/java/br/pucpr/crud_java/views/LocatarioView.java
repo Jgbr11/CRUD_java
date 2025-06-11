@@ -184,9 +184,11 @@ public class LocatarioView {
             if (digitos.length() > 2) {
                 textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2);
             }
+
             if (digitos.length() > 5) {
                 textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2, 5) + "." + digitos.substring(5);
             }
+
             if (digitos.length() > 8) {
                 textoFormatado = digitos.substring(0, 2) + "." + digitos.substring(2, 5) + "." + digitos.substring(5, 8) + "/" + digitos.substring(8);
             }

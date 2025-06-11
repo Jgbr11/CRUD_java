@@ -3,9 +3,7 @@ package br.pucpr.crud_java.views;
 import br.pucpr.crud_java.TelaInicial;
 import br.pucpr.crud_java.alerts.Alerts;
 import br.pucpr.crud_java.models.Boleto;
-import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.persistencias.ArquivoBoleto;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -13,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -62,7 +59,7 @@ public class BoletoView {
 
         Label labelDataVenc = new Label("Data de vencimento");
         DatePicker datePickerVenc = new DatePicker();
-        datePickerVenc.setPromptText("Escolha a data");
+        datePickerVenc.setPromptText("DD/MM/AAAA");
 
         Label labelCedente = new Label("Cedente");
         TextField txtCedente = new TextField("Tijucas Open");

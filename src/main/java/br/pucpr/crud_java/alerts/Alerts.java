@@ -27,4 +27,12 @@ public class Alerts {
         alert.showAndWait();
     }
 
+    public static void alertConfirm(String titulo, String msg){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText("Tem certeza?");
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
 }
