@@ -19,4 +19,12 @@ public class Alerts {
         alert.showAndWait();
     }
 
+    public static void alertWarning(String titulo, String msg){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText("Erro");
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
 }

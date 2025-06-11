@@ -1,9 +1,6 @@
 package br.pucpr.crud_java; // CORRIGIDO: Deve estar no pacote 'views'
 
-import br.pucpr.crud_java.views.BoletoView;
-import br.pucpr.crud_java.views.ContratoView;
-import br.pucpr.crud_java.views.LocatarioView;
-import br.pucpr.crud_java.views.LojaView;
+import br.pucpr.crud_java.views.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -88,6 +85,7 @@ public class TelaInicial {
 
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
+        btnEspacos.setOnAction(e -> new EspacoView(stage).mostrar());
 
         navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas, btnEspacos);
         return navBar;

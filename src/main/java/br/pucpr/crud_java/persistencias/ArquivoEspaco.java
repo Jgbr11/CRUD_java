@@ -62,10 +62,10 @@ public class ArquivoEspaco {
         }
         System.out.println("ID não encontrado. Nenhuma alteração feita.");
     }
-    public static void excluirEspaco(Espaco novoEspaco) {
+    public static void excluirEspaco(int id) {
         ArrayList<Espaco> espacos = lerLista();
         for (Espaco e : espacos) {
-            if (novoEspaco.equals(e)) {
+            if (id == e.getId()) {
                 espacos.remove(e);
                 salvarLista(espacos);
                 System.out.println("Espaço removido com sucesso!");

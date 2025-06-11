@@ -176,6 +176,8 @@ public class LojaView {
 
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
+        btnEspacos.setOnAction(e -> new EspacoView(stage).mostrar());
+
 
 
         navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas, btnEspacos);

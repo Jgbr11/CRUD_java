@@ -7,17 +7,23 @@ public class Espaco implements Serializable {
     @Serial
     private static final long serialVersionUIDn = 1L;
 
+    private int id;
     private int piso;
     private double area;
     private boolean espacoStatus;
 
-    public Espaco(int piso, double area) {
+    public Espaco(int id,int piso, double area) {
+        this.id = id;
         this.piso = piso;
         this.area = area;
     }
 
     @Override
     public String toString() { return "Piso: " + this.piso + " Area: " + this.area; }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
 
     public int getPiso() {return piso;}
 
