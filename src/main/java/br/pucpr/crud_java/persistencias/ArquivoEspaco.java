@@ -10,13 +10,10 @@ import java.util.ArrayList;
 
 public class ArquivoEspaco {
 
-    // <<< MUDANÇA 1: Caminhos relativos para a raiz do projeto >>>
-    // Removida a lógica de DATA_DIR. Agora os arquivos serão salvos
-    // no mesmo local onde o programa é executado (a raiz do seu projeto no IDE).
+
     private static final Path ARQUIVO_DADOS_PATH = Paths.get("espacos.dat");
     private static final Path PROXIMO_ID_PATH = Paths.get("proximoId_espaco.dat"); // Nome específico para evitar conflito
 
-    // --- MÉTODOS PRIVADOS (Lógica interna da classe) ---
 
     private static int lerProximoId() {
         if (Files.exists(PROXIMO_ID_PATH)) {
@@ -45,8 +42,6 @@ public class ArquivoEspaco {
             System.err.println("Erro ao salvar " + ARQUIVO_DADOS_PATH + ": " + e.getMessage());
         }
     }
-
-    // --- MÉTODOS PÚBLICOS (O que a sua View vai chamar) ---
 
     public static ArrayList<Espaco> lerLista() {
         if (Files.notExists(ARQUIVO_DADOS_PATH)) {
