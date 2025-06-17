@@ -37,23 +37,23 @@ public class ContratoView {
     private void criarUI() {
         stage.setTitle("Gestão de Contratos");
 
-        // Carrega os dados do arquivo de Contratos
+
         ArrayList<Contrato> contratos = ArquivoContrato.lerLista();
         contratosObservable.setAll(contratos);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-padding: 10;");
 
-        // --- MENU DE NAVEGAÇÃO ---
+
         HBox navBar = criarMenuNavegacao();
         borderPane.setTop(navBar);
 
-        // --- FORMULÁRIO DE CADASTRO (LADO ESQUERDO) ---
+
         VBox painelFormulario = new VBox(10);
         painelFormulario.setStyle("-fx-padding: 10;");
         painelFormulario.setPrefWidth(250);
 
-        // Campos do formulário
+
         Label labelNomeEmpresa = new Label("Nome da Empresa");
         TextField txtNomeEmpresa = new TextField();
         txtNomeEmpresa.setPromptText("Digite o nome da empresa");
@@ -83,7 +83,7 @@ public class ContratoView {
         );
         borderPane.setLeft(painelFormulario);
 
-        // --- TABELA DE CONTRATOS (LADO DIREITO) ---
+
         VBox painelTabela = new VBox(10);
         painelTabela.setStyle("-fx-padding: 10;");
 
@@ -93,25 +93,31 @@ public class ContratoView {
         painelTabela.getChildren().addAll(contratoTable, btnRemover);
         borderPane.setCenter(painelTabela);
 
-        // --- AÇÕES DOS BOTÕES ---
+
         btnCadastrar.setOnAction(e -> {
             try {
-                // Coleta e valida os dados do formulário
+
                 String nomeEmpresa = txtNomeEmpresa.getText();
                 LocalDate dataInicio = datePickerInicio.getValue();
-                double valorMensal = Double.parseDouble(txtValorMensal.getText());
+                double valorMensal = Double.parseDouble(txtValorMensal.getText().replace(",", "."));
                 boolean status = checkStatus.isSelected();
 
                 if (nomeEmpresa.isEmpty() || dataInicio == null) {
                     throw new IllegalArgumentException("Nome e Data de Início são obrigatórios.");
                 }
 
-                // Cria e salva o novo contrato
+                boolean nomeDuplicado = contratosObservable.stream()
+                        .anyMatch(c -> c.getNomeLocatario().equalsIgnoreCase(nomeEmpresa.trim()));
+
+                if (nomeDuplicado) {
+                    exibirAlerta(Alert.AlertType.WARNING, "Duplicado", "Já existe um contrato com esse nome de empresa.");
+                    return;
+                }
+
                 Contrato novoContrato = new Contrato(nomeEmpresa, dataInicio, valorMensal, status);
                 ArquivoContrato.adicionarContrato(novoContrato);
                 contratosObservable.add(novoContrato);
 
-                // Limpa o formulário e exibe sucesso
                 txtNomeEmpresa.clear();
                 datePickerInicio.setValue(null);
                 txtValorMensal.clear();
@@ -142,14 +148,12 @@ public class ContratoView {
             });
         });
 
-        // --- CONFIGURAÇÃO FINAL DA CENA ---
+
         Scene cena = new Scene(borderPane, 900, 600);
         this.stage.setScene(cena);
     }
 
-    /**
-     * Helper para criar a tabela de contratos, mantendo o código organizado.
-     */
+
     private TableView<Contrato> criarTabelaContratos() {
         TableView<Contrato> table = new TableView<>();
         table.setItems(contratosObservable);
@@ -167,13 +171,26 @@ public class ContratoView {
         TableColumn<Contrato, String> colStatus = new TableColumn<>("Status");
         colStatus.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().isAtivo() ? "Ativo" : "Inativo"));
 
+        colStatus.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    setStyle(item.equals("Ativo") ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                }
+            }
+        });
+
+
         table.getColumns().addAll(colNomeEmpresa, colDataInicio, colValor, colStatus);
         return table;
     }
 
-    /**
-     * Helper para criar a barra de navegação superior.
-     */
+
     private HBox criarMenuNavegacao() {
         HBox navBar = new HBox(15);
         navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
@@ -195,7 +212,6 @@ public class ContratoView {
         btnBoletos.setStyle(styleBtn);
         btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
 
-        // Adicione aqui os outros botões quando tiver as telas prontas
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
@@ -210,9 +226,8 @@ public class ContratoView {
         return navBar;
     }
 
-    /**
-     * Helper para exibir alertas de forma padronizada.
-     */
+
+
     private void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -223,10 +238,7 @@ public class ContratoView {
 
     private void adicionarFiltroApenasNumeros(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // O regex '\\d*' significa "zero ou mais dígitos".
-            // Se o novo valor não corresponder a isso...
-            if (!newValue.matches("\\d*")) {
-                // ...reverte a mudança, voltando ao valor antigo (que era válido).
+            if (!newValue.matches("^\\d*(\\.\\d{0,2}|,\\d{0,2})?$")) {
                 textField.setText(oldValue);
             }
         });

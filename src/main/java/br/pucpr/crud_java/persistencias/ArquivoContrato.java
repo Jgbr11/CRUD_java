@@ -56,15 +56,6 @@ public class ArquivoContrato {
         salvarLista(contratos);
     }
 
-    public static Contrato buscarContratoPorId(Contrato contrato) {
-        ArrayList<Contrato> contratos = lerLista();
-        for (Contrato c : contratos) {
-            if (contrato.equals(c)) {
-                return c;
-            }
-        }
-        return null;
-    }
 
     public static void removerContrato(Contrato contrato){
         ArrayList<Contrato> contratos = lerLista();
