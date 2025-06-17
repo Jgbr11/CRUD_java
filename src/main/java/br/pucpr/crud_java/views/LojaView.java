@@ -1,7 +1,10 @@
 package br.pucpr.crud_java.views;
 
 import br.pucpr.crud_java.TelaInicial;
+import br.pucpr.crud_java.alerts.Alerts;
+import br.pucpr.crud_java.models.Boleto;
 import br.pucpr.crud_java.models.Loja;
+import br.pucpr.crud_java.persistencias.ArquivoBoleto;
 import br.pucpr.crud_java.persistencias.ArquivoLoja;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -68,9 +71,13 @@ public class LojaView {
         painelTabela.setStyle("-fx-padding: 10;");
 
         TableView<Loja> lojaTable = criarTabelaLojas();
+        Button btnEditar = new Button("Editar Selecionado");
         Button btnRemover = new Button("Remover Selecionado");
 
-        painelTabela.getChildren().addAll(lojaTable, btnRemover);
+        HBox painelBotoes = new HBox(10, btnEditar, btnRemover);
+        borderPane.setCenter(painelTabela);
+
+        painelTabela.getChildren().addAll(lojaTable, btnEditar, btnRemover);
         borderPane.setCenter(painelTabela);
 
 
@@ -103,6 +110,24 @@ public class LojaView {
 
             } catch (IllegalArgumentException ex) {
                 exibirAlerta(Alert.AlertType.ERROR, "Erro de Validação", ex.getMessage());
+            }
+        });
+
+
+        btnEditar.setOnAction(e -> {
+            try {
+                Loja lojaSelecionado =
+                        lojaTable.getSelectionModel().getSelectedItem();
+                if (lojaSelecionado != null){
+                    new ModalLojaEdit(stage, lojaSelecionado).mostrar();
+                    lojasObservable.setAll(ArquivoLoja.lerLista());
+                } else {
+                    Alerts.alertError("Erro", "Selecione uma loja para " +
+                            "editar");
+                }
+            } catch (NullPointerException ex){
+                Alerts.alertError("Erro",
+                        "Nenhuma loja selecionada. Erro: " + ex.getMessage());
             }
         });
 

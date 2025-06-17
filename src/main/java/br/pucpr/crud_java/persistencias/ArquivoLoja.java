@@ -1,6 +1,5 @@
 package br.pucpr.crud_java.persistencias;
 
-import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.models.Loja;
 import java.io.*;
 import java.util.ArrayList;
@@ -48,36 +47,46 @@ public class ArquivoLoja {
     public static void adicionarLoja(Loja novaLoja) {
         ArrayList<Loja> lojas = lerLista();
 
-
         for (Loja l : lojas) {
-            if (novaLoja.equals(l)) {
+            if (novaLoja.getLojaNome().equalsIgnoreCase(l.getLojaNome()) || novaLoja.getLojaTelefone().equals(l.getLojaTelefone())) {
                 System.out.println("Loja já existente! Loja não cadastrada!");
                 return;
             }
         }
-
-
-
         lojas.add(novaLoja);
         salvarLista(lojas);
-
     }
 
-    public static void editarLoja(Loja novaloja, String novoNome, String novoTelefone, String novoTipo) {
+    public static void editarLoja(String nomeOriginalLoja, String novoNome, String novoTelefone, String novoTipo) throws IllegalArgumentException {
         ArrayList<Loja> lojas = lerLista();
+        Loja lojaParaEditar = null;
+
         for (Loja l : lojas) {
-            if (novaloja.equals(l)) {
-                l.setLojaNome(novoNome);
-                l.setLojaTelefone(novoTelefone);
-                l.setLojaTipo(novoTipo);
-                salvarLista(lojas);
-                System.out.println("Loja atualizada com sucesso!");
-                return;
+            if (Objects.equals(l.getLojaNome(), nomeOriginalLoja)) {
+                lojaParaEditar = l;
+                break;
             }
         }
-        System.out.println("O ID da loja não foi encontrado, não foi possível atualizar!");
 
+        if (lojaParaEditar == null) {
+            throw new IllegalArgumentException("Loja com o nome '" + nomeOriginalLoja + "' não encontrada. Não foi possível atualizar.");
+        }
+
+        for (Loja l : lojas) {
+            if (l != lojaParaEditar) {
+                if (novoNome.equalsIgnoreCase(l.getLojaNome())) {
+                    throw new IllegalArgumentException("Já existe outra loja com o nome '" + novoNome + "'. A edição não foi salva.");
+                }
+                if (novoTelefone.equals(l.getLojaTelefone())) {
+                    throw new IllegalArgumentException("Já existe outra loja com o telefone '" + novoTelefone + "'. A edição não foi salva.");
+                }
+            }
+        }
+        lojaParaEditar.setLojaNome(novoNome);
+        lojaParaEditar.setLojaTelefone(novoTelefone);
+        lojaParaEditar.setLojaTipo(novoTipo);
     }
+
 
     public static void removerLoja(String lojaNome) {
         ArrayList<Loja> lojas = lerLista();
@@ -89,8 +98,6 @@ public class ArquivoLoja {
                 return;
             }
         }
-        System.out.println("O ID da loja não foi encontrado, não foi possível excluir!");
+        System.out.println("O nome da loja não foi encontrado, não foi possível excluir!");
     }
-
-
 }

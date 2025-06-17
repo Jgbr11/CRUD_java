@@ -26,7 +26,6 @@ public class Loja implements Serializable {
 
 
 
-
     public String getLojaNome() {
         return lojaNome;
     }
