@@ -6,6 +6,7 @@ import br.pucpr.crud_java.models.Espaco;
 import br.pucpr.crud_java.persistencias.ArquivoEspaco;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -17,7 +18,6 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 public class EspacoView {
     private Stage stage;
-
     private ObservableList<Espaco> espacosObservable = observableArrayList();
 
     public EspacoView(Stage stage) {
@@ -60,9 +60,14 @@ public class EspacoView {
         painelTabela.setStyle("-fx-padding: 10;");
 
         TableView<Espaco> espacoTable = criarTabelaEspacos();
+
+        Button btnEditar = new Button("Editar Selecionado");
         Button btnRemover = new Button("Remover Selecionado");
 
-        painelTabela.getChildren().addAll(espacoTable, btnRemover);
+        HBox painelBotoesTabela = new HBox(10, btnEditar, btnRemover);
+        painelBotoesTabela.setAlignment(Pos.CENTER_LEFT);
+
+        painelTabela.getChildren().addAll(espacoTable, painelBotoesTabela);
         borderPane.setCenter(painelTabela);
 
         btnCad.setOnAction(e -> {
@@ -75,9 +80,7 @@ public class EspacoView {
                 }
 
                 ArquivoEspaco.adicionarEspaco(piso, area);
-
-                espacosObservable.setAll(ArquivoEspaco.lerLista());
-
+                espacosObservable.setAll(ArquivoEspaco.lerLista()); // Atualiza a tabela
                 txtArea.clear();
                 txtPiso.clear();
                 Alerts.alertInfo("Sucesso", "Espaço cadastrado com sucesso!");
@@ -87,6 +90,19 @@ public class EspacoView {
             } catch (IllegalArgumentException ex) {
                 Alerts.alertError("Erro de Validação", ex.getMessage());
             }
+        });
+
+        btnEditar.setOnAction(e -> {
+            Espaco espacoSelecionado = espacoTable.getSelectionModel().getSelectedItem();
+            if (espacoSelecionado == null) {
+                Alerts.alertWarning("Nenhuma Seleção", "Por favor, selecione um espaço para editar.");
+                return;
+            }
+
+            ModalEspacoEdit modal = new ModalEspacoEdit(this.stage, espacoSelecionado);
+            modal.mostrar();
+
+            espacosObservable.setAll(ArquivoEspaco.lerLista());
         });
 
         btnRemover.setOnAction(e -> {
@@ -101,7 +117,7 @@ public class EspacoView {
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
                     ArquivoEspaco.excluirEspaco(espacoSelecionado.getId());
-                    espacosObservable.setAll(ArquivoEspaco.lerLista());
+                    espacosObservable.setAll(ArquivoEspaco.lerLista()); // Atualiza a tabela
                     Alerts.alertInfo("Sucesso", "Espaço removido.");
                 }
             });
@@ -115,52 +131,33 @@ public class EspacoView {
         TableView<Espaco> table = new TableView<>(espacosObservable);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
         TableColumn<Espaco, String> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getId())));
-
         TableColumn<Espaco, String> colArea = new TableColumn<>("Área (m²)");
         colArea.setCellValueFactory(cell -> new SimpleStringProperty(String.format("%.2f", cell.getValue().getArea())));
-
         TableColumn<Espaco, String> colPiso = new TableColumn<>("Piso");
         colPiso.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getPiso())));
-
         table.getColumns().addAll(colId, colArea, colPiso);
         return table;
     }
-
 
     private HBox criarMenuNavegacao() {
         HBox navBar = new HBox(15);
         navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
         String styleBtn = "-fx-background-color: transparent; -fx-font-weight: bold;";
-
-
         Button btnHome = new Button("Home");
         btnHome.setStyle(styleBtn);
         btnHome.setOnAction(e -> new TelaInicial(stage).mostrar());
-
         Button btnLocatarios = new Button("Locatários");
         btnLocatarios.setStyle(styleBtn);
-        btnLocatarios.setOnAction(e -> new LocatarioView(stage).mostrar());
-
         Button btnContratos = new Button("Contratos");
         btnContratos.setStyle(styleBtn);
-        btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
-
         Button btnBoletos = new Button("Boletos");
         btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
-        Button btnLojas = new Button("Lojas");
-        btnLojas.setStyle(styleBtn);
-        btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
-
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
         btnEspacos.setOnAction(e -> this.mostrar());
-
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas,btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnEspacos);
         return navBar;
     }
 }

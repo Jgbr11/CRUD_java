@@ -76,4 +76,22 @@ public class ArquivoEspaco {
             System.out.println("O ID do espaço não foi encontrado.");
         }
     }
+    public static void editarEspaco(int id, int novoPiso, double novaArea){
+        ArrayList<Espaco> espacos = lerLista();
+        boolean encontrado = false;
+        for (Espaco espaco : espacos) {
+            if (espaco.getId() == id) {
+                espaco.setPiso(novoPiso);
+                espaco.setArea(novaArea);
+                encontrado = true;
+                break;
+            }
+        }
+        if (encontrado) {
+            salvarLista(espacos);
+            System.out.println("Espaço editado com sucesso!");
+        } else {
+            System.out.println("O ID do espaço não foi encontrado.");
+        }
+    }
 }
