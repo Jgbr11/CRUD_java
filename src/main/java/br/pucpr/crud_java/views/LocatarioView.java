@@ -1,6 +1,7 @@
 package br.pucpr.crud_java.views;
 
 import br.pucpr.crud_java.TelaInicial;
+import br.pucpr.crud_java.alerts.Alerts;
 import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.persistencias.ArquivoLocatario;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,8 +69,9 @@ public class LocatarioView {
 
         TableView<Locatario> locatarioTable = criarTabelaLocatarios();
 
+        Button btnEditar = new Button("Editar Selecionado");
         Button btnRemover = new Button("Remover Selecionado");
-        painelTabela.getChildren().addAll(locatarioTable, btnRemover);
+        painelTabela.getChildren().addAll(locatarioTable, btnRemover, btnEditar);
         borderPane.setCenter(painelTabela);
 
         btnCadastrar.setOnAction(e -> {
@@ -87,9 +89,31 @@ public class LocatarioView {
             if (locatarioSelecionado != null) {
                 ArquivoLocatario.removerLocatario(locatarioSelecionado.getLocatario_cnpj());
                 locatariosObservable.remove(locatarioSelecionado);
+                Alerts.alertInfo("Removido","Locatário removido com sucesso");
             } else {
+                Alerts.alertError("Erro", "Erro ao remover locatário!");
             }
         });
+
+
+        btnEditar.setOnAction(e -> {
+            try {
+                Locatario locatarioSelecionado =
+                        locatarioTable.getSelectionModel().getSelectedItem();
+                if (locatarioSelecionado != null){
+                    new ModalLocatarioEdit(stage, locatarioSelecionado).mostrar();
+                    locatariosObservable.setAll(ArquivoLocatario.lerLista());
+                } else {
+                    Alerts.alertError("Erro", "Selecione um locatário para " +
+                            "editar");
+                }
+            } catch (NullPointerException ex){
+                Alerts.alertError("Erro",
+                        "Nenhum locatário selecionado. Erro: " + ex.getMessage());
+            }
+        });
+
+
 
         Scene cena = new Scene(borderPane, 900, 600);
         this.stage.setScene(cena);

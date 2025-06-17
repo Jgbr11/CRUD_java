@@ -57,7 +57,7 @@ public class ArquivoLocatario {
         salvarLista(locatarios);
     }
 
-    public static void editarLocatario(String cnpj, String novo_nome, String novo_telefone, String novo_email) {
+    public static void editarLocatario(String cnpj, String novo_nome, String novo_email, String novo_telefone) {
         ArrayList<Locatario> locatarios = lerLista();
         for (Locatario loc : locatarios) {
             if (cnpj != null && cnpj.equals(loc.getLocatario_cnpj())) {
