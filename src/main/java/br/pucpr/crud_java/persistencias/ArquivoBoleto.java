@@ -11,99 +11,133 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class ArquivoBoleto {
-    private static final String CAMINHO_ARQUIVO = "boletos.dat";
+    private static final String PROXIMO_NUM_CAMINHO = "proximoNum_Boleto" +
+            ".dat";
 
-    public static void salvarLista(ArrayList<Boleto> boletos){
-        FileOutputStream f;
+    private static int lerProximoNum(){
         try {
-            File arquivo = new File(CAMINHO_ARQUIVO);
-            if (!arquivo.exists()){
-                arquivo.createNewFile();
+            File arquivoNumDoc = new File(PROXIMO_NUM_CAMINHO);
+            if (arquivoNumDoc.exists()){
+                DataInputStream dis =
+                        new DataInputStream(new FileInputStream(arquivoNumDoc));
+                return dis.readInt();
             }
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo));
-            oos.writeObject(boletos);
-            oos.close();
-            System.out.println("Lista de boletos salva com sucesso!");
-        } catch (FileNotFoundException e){
-            System.err.println("Erro ao salvar lista: " + e.getMessage());
+            return 1;
         } catch (IOException e){
-            System.err.println("Erro ao salvar lista: " + e.getMessage());
+            System.err.println("Erro ao ler " + PROXIMO_NUM_CAMINHO + ", " +
+                    "reiniciando contador. Erro: " + e.getMessage());
+            return 1;
         }
     }
 
-    public static ArrayList<Boleto> lerLista(){
-        ArrayList<Boleto> lista = new ArrayList<>();
+    private static void salvarProximoNumDoc(int proximoNumDoc){
         try {
-            File arquivo = new File(CAMINHO_ARQUIVO);
-            if (arquivo.exists()) {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(CAMINHO_ARQUIVO));
-                lista = (ArrayList<Boleto>) ois.readObject();
-                ois.close();
+            File arquivoNumDoc = new File(PROXIMO_NUM_CAMINHO);
+            if(!arquivoNumDoc.exists()){
+                arquivoNumDoc.createNewFile();
             }
-        } catch (ClassNotFoundException e){
-            System.err.println("Erro ao ler lista: " + e.getMessage());
-        } catch (IOException e) {
-            System.err.println("Erro ao ler lista: " + e.getMessage());
+            DataOutputStream dos =
+                    new DataOutputStream(new FileOutputStream(arquivoNumDoc));
+            dos.writeInt(proximoNumDoc);
+        } catch (IOException e){
+            System.err.println("Erro ao salvar em " + PROXIMO_NUM_CAMINHO +
+                    ". Erro: " + e.getMessage());
         }
-        return lista;
     }
 
-    public static void adicionarBoleto(Boleto novoBoleto) {
-        ArrayList<Boleto> boletos = lerLista();
-
-        for (Boleto boleto : boletos) {
-            if (novoBoleto.getNumeroDocumento() == boleto.getNumeroDocumento()){
-                System.out.println("Boleto já existente!");
-                return;
+    public static ArrayList<Boleto> lerLista(int contratoId){
+        ArrayList<Contrato> contratos = ArquivoContrato.lerLista();
+        ArrayList<Boleto> boletosContrato = new ArrayList<>();
+        try {
+            for (Contrato c : contratos){
+                if (c.getContratoId() == contratoId){
+                    boletosContrato = c.getBoletos();
+                }
             }
+        } catch (NullPointerException e) {
+            System.err.println("Erro ao ler lista: " + e.getMessage());
         }
-        boletos.add(novoBoleto);
-        salvarLista(boletos);
+        return boletosContrato;
     }
 
-    public static void removerBoleto(long numeroDocumento){
-        ArrayList<Boleto> boletos = lerLista();
-        Boolean boletoRemovido = false;
-        for (Boleto b : boletos){
-            if (numeroDocumento >= 0 && b.getNumeroDocumento() ==
-                    numeroDocumento){
-                boletos.remove(b);
-                boletoRemovido = true;
+    public static void adicionarBoleto(Boleto novoBoleto, int contratoId) {
+        ArrayList<Contrato> contratos = ArquivoContrato.lerLista();
+        int novoNumDoc = lerProximoNum();
+
+
+        for (Contrato c : contratos) {
+            if (c.getContratoId() == contratoId){
+                for (Boleto b : c.getBoletos()){
+                    if (novoBoleto.getNumeroDocumento() == b.getNumeroDocumento()){
+                        System.out.println("Boleto já existente!");
+                        return;
+                    }
+                }
+                novoBoleto.setNumeroDocumento(novoNumDoc);
+                c.getBoletos().add(novoBoleto);
+                salvarProximoNumDoc(novoNumDoc + 1);
                 break;
             }
         }
-        if(boletoRemovido) {
-            salvarLista(boletos);
-            System.out.println("Boleto removido com sucesso!");
-        } else {
-            System.err.println("Boleto não encontrado ou inexistente!");
+        ArquivoContrato.salvarLista(contratos);
+    }
+
+    public static void removerBoleto(int numeroDocumento, int contratoId) {
+        try {
+            ArrayList<Contrato> contratos = ArquivoContrato.lerLista();
+            boolean removido  = false;
+            for (Contrato c : contratos) {
+                if (c.getContratoId() == contratoId) {
+                    c.getBoletos().removeIf(
+                            b -> b.getNumeroDocumento() == numeroDocumento);
+                    removido = true;
+                    break;
+                }
+            }
+            if (removido) {
+                ArquivoContrato.salvarLista(contratos);
+                System.out.println("Boleto removido com sucesso!");
+            } else {
+                System.err.println("Boleto não encontrado, nenhum boleto foi " +
+                        "apagado");
+            }
+        } catch (NullPointerException e){
+            System.err.println("Não foi possível ler lista de contratos. " +
+                    "Erro: " + e.getMessage());
         }
     }
 
-    public static void editarBoleto(long numeroDocumento,
+    public static void editarBoleto(int numeroDocumento,
                                     double valor,
                                     LocalDate vencimento, String cedente,
-                                    String banco, String linhaDigitavel){
-        ArrayList<Boleto> boletos = lerLista();
+                                    String banco, String linhaDigitavel,
+                                    int contratoId){
+        try {
+            ArrayList<Contrato> contratos = ArquivoContrato.lerLista();
 
-        for (Boleto b : boletos){
-            if (b.getNumeroDocumento() == numeroDocumento){
-                b.setNumeroDocumento(numeroDocumento);
-                b.setValor(valor);
-                b.setVencimento(vencimento);
-                b.setCedente(cedente);
-                b.setBanco(banco);
-                b.setLinhaDigitavel(linhaDigitavel);
-                salvarLista(boletos);
-                System.out.println("Boleto atualizado com sucesso!");
-                return;
+            for (Contrato c : contratos) {
+                if (c.getContratoId() == contratoId) {
+                    ArrayList<Boleto> boletos = c.getBoletos();
+                    for (Boleto b : boletos) {
+                        if (b.getNumeroDocumento() == numeroDocumento) {
+                            b.setValor(valor);
+                            b.setVencimento(vencimento);
+                            b.setCedente(cedente);
+                            b.setBanco(banco);
+                            b.setLinhaDigitavel(linhaDigitavel);
+                            ArquivoContrato.salvarLista(contratos);
+                            System.out.println(
+                                    "Boleto atualizado com sucesso!");
+                            return;
+                        }
+                    }
+                    System.err.println("Boleto não encontrado, nenhuma " +
+                            "alteração foi feita!");
+                }
             }
+        } catch (NullPointerException e){
+            System.err.println("Não foi possivel ler lista de contratos. " +
+                    "Erro: " + e.getMessage());
         }
-        System.out.println("Boleto inexistente ou não encontrado");
-    }
-
-
-
-
-
+        }
 }

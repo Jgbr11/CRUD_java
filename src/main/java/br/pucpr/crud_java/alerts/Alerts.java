@@ -22,7 +22,7 @@ public class Alerts {
     public static void alertWarning(String titulo, String msg){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
-        alert.setHeaderText("Erro");
+        alert.setHeaderText("Aviso");
         alert.setContentText(msg);
         alert.showAndWait();
     }
