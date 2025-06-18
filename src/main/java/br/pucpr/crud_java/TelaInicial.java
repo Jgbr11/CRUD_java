@@ -1,4 +1,4 @@
-package br.pucpr.crud_java; // CORRIGIDO: Deve estar no pacote 'views'
+package br.pucpr.crud_java;
 
 import br.pucpr.crud_java.views.*;
 import javafx.geometry.Pos;

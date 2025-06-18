@@ -91,7 +91,6 @@ public class ModalLojaEdit {
     }
 
 
-
     private void adicionarMascaraTelefone(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             String digitos = newValue.replaceAll("\\D", "");
@@ -100,7 +99,7 @@ public class ModalLojaEdit {
             String textoFormatado = digitos;
             if (digitos.length() > 2) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2);
             if (digitos.length() > 7) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 7) + "-" + digitos.substring(7);
-
+            else if (digitos.length() > 6) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 6) + "-" + digitos.substring(6);
 
             if (!newValue.equals(textoFormatado)) {
                 textField.setText(textoFormatado);

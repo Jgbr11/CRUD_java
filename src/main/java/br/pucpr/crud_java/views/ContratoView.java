@@ -116,7 +116,8 @@ public class ContratoView {
             try {
                 String nomeEmpresa = locatarioComboBox.getValue();
                 LocalDate dataInicio = datePickerInicio.getValue();
-                double valorMensal = Double.parseDouble(txtValorMensal.getText());
+                String valorTexto = txtValorMensal.getText().replace(",", ".");
+                double valorMensal = Double.parseDouble(valorTexto);
                 boolean status = checkStatus.isSelected();
                 ArrayList<Boleto> boletos = new ArrayList<>();
                 String linhaDig = "1000000000000";
