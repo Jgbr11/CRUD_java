@@ -27,7 +27,11 @@ public class LocatarioView {
 
     private void criarUI() {
         stage.setTitle("Gestão de Locatários");
+
+
         locatariosObservable.setAll(ArquivoLocatario.lerLista());
+
+
 
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-padding: 10;");
