@@ -64,13 +64,28 @@ public class ModalLocatarioEdit {
         Button btnEditar = new Button("Salvar");
         btnEditar.setOnAction(e -> {
                     try {
-                        String cnpjEmpresa = txtCNPJ.getText();
-                        String nomeEmpresa = txtNome.getText();
-                        String emailEmpresa = txtEmail.getText();
-                        String telefoneEmpresa = txtTelefone.getText();
-                        if (emailEmpresa != "" && telefoneEmpresa != "") {
+                        String cnpj = txtCNPJ.getText();
+                        String nome = txtNome.getText();
+                        String email = txtEmail.getText();
+                        String telefone = txtTelefone.getText();
 
-                            ArquivoLocatario.editarLocatario(cnpjEmpresa, nomeEmpresa, emailEmpresa, telefoneEmpresa);
+                        if (nome.isEmpty()) {
+                            Alerts.alertError("Erro de Validação", "O Nome da empresa não pode ser vazio.");
+                            return;
+                        }
+
+                        if (email.isEmpty() || !email.contains("@")) {
+                            Alerts.alertError("Erro de Validação", "Insira um e-mail válido");
+                            return;
+                        }
+
+                        if (telefone.isEmpty() || telefone.length() < 14) {
+                            Alerts.alertError("Erro de Validação", "O Telefone deve ser preenchido completamente.");
+                            return;
+                        }
+                        if (email != "" && telefone != "") {
+
+                            ArquivoLocatario.editarLocatario(cnpj, nome, email, telefone);
 
                             Alerts.alertInfo("Editado",
                                     "Locatário editado com sucesso");
