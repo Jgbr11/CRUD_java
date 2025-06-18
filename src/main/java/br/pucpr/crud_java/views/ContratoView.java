@@ -1,5 +1,10 @@
 package br.pucpr.crud_java.views;
 import br.pucpr.crud_java.TelaInicial;
+import br.pucpr.crud_java.alerts.Alerts;
+import br.pucpr.crud_java.models.Boleto;
+import br.pucpr.crud_java.models.Locatario;
+import br.pucpr.crud_java.persistencias.ArquivoBoleto;
+import br.pucpr.crud_java.persistencias.ArquivoLocatario;
 import br.pucpr.crud_java.views.LocatarioView;
 
 import br.pucpr.crud_java.models.Contrato;
@@ -15,8 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -37,29 +46,38 @@ public class ContratoView {
     private void criarUI() {
         stage.setTitle("Gestão de Contratos");
 
-
         ArrayList<Contrato> contratos = ArquivoContrato.lerLista();
+        ArrayList<Locatario> locatarios = ArquivoLocatario.lerLista();
         contratosObservable.setAll(contratos);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-padding: 10;");
 
-
         HBox navBar = criarMenuNavegacao();
         borderPane.setTop(navBar);
-
 
         VBox painelFormulario = new VBox(10);
         painelFormulario.setStyle("-fx-padding: 10;");
         painelFormulario.setPrefWidth(250);
 
+        // Campos do formulário
+        Label labelNomeEmpresa = new Label("Nome de Locatário");
+        ComboBox<String> locatarioComboBox = new ComboBox<>();
+        locatarioComboBox.setPromptText("Selecione a empresa");
+        Set<String> cnpjComContratos = new HashSet<>();
+        for (Contrato c : contratos){
+            cnpjComContratos.add(c.getlocatario().getLocatarioCnpj());
+        }
+        for (Locatario l : locatarios){
+            if (!cnpjComContratos.contains(l.getLocatarioCnpj())){
+                locatarioComboBox.getItems().add(l.getLocatarioNome());
+            }
 
-        Label labelNomeEmpresa = new Label("Nome da Empresa");
-        TextField txtNomeEmpresa = new TextField();
-        txtNomeEmpresa.setPromptText("Digite o nome da empresa");
+        }
 
         Label labelDataInicio = new Label("Data de Início");
-        DatePicker datePickerInicio = new DatePicker();
+        DatePicker datePickerInicio = new DatePicker(LocalDate.now());
+        datePickerInicio.setEditable(false);
 
         Label labelValorMensal = new Label("Valor Mensal");
         TextField txtValorMensal = new TextField();
@@ -75,7 +93,7 @@ public class ContratoView {
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
         painelFormulario.getChildren().addAll(
-                labelNomeEmpresa, txtNomeEmpresa,
+                labelNomeEmpresa, locatarioComboBox,
                 labelDataInicio, datePickerInicio,
                 labelValorMensal, txtValorMensal,
                 labelStatus, checkStatus,
@@ -83,87 +101,128 @@ public class ContratoView {
         );
         borderPane.setLeft(painelFormulario);
 
-
         VBox painelTabela = new VBox(10);
         painelTabela.setStyle("-fx-padding: 10;");
 
         TableView<Contrato> contratoTable = criarTabelaContratos();
 
         Button btnRemover = new Button("Remover Selecionado");
-        painelTabela.getChildren().addAll(contratoTable, btnRemover);
+        Button btnVerBoletos = new Button("Ver boletos");
+        painelTabela.getChildren().addAll(contratoTable, btnRemover,
+                btnVerBoletos);
         borderPane.setCenter(painelTabela);
-
 
         btnCadastrar.setOnAction(e -> {
             try {
-
-                String nomeEmpresa = txtNomeEmpresa.getText();
+                String nomeEmpresa = locatarioComboBox.getValue();
                 LocalDate dataInicio = datePickerInicio.getValue();
-                double valorMensal = Double.parseDouble(txtValorMensal.getText().replace(",", "."));
+                double valorMensal = Double.parseDouble(txtValorMensal.getText());
                 boolean status = checkStatus.isSelected();
+                ArrayList<Boleto> boletos = new ArrayList<>();
+                String linhaDig = "1000000000000";
+                BigInteger linhaDigNum = new BigInteger(linhaDig);
 
-                if (nomeEmpresa.isEmpty() || dataInicio == null) {
+                Locatario empresa = null;
+                for (Locatario l : locatarios){
+                    if (nomeEmpresa.equals(l.getLocatarioNome())){
+                        empresa = l;
+                        break;
+                    }
+                }
+
+                if (empresa == null || dataInicio == null) {
                     throw new IllegalArgumentException("Nome e Data de Início são obrigatórios.");
                 }
 
-                boolean nomeDuplicado = contratosObservable.stream()
-                        .anyMatch(c -> c.getNomeLocatario().equalsIgnoreCase(nomeEmpresa.trim()));
+                Contrato novoContrato = new Contrato(empresa, dataInicio,
+                        valorMensal, status);
 
-                if (nomeDuplicado) {
-                    exibirAlerta(Alert.AlertType.WARNING, "Duplicado", "Já existe um contrato com esse nome de empresa.");
-                    return;
-                }
-
-                Contrato novoContrato = new Contrato(nomeEmpresa, dataInicio, valorMensal, status);
                 ArquivoContrato.adicionarContrato(novoContrato);
+
+                for (int i = 1; i <= 12; i++) {
+                    LocalDate vencimento = dataInicio.plusMonths(i);
+                    linhaDigNum = linhaDigNum.add(BigInteger.ONE);
+                    linhaDig = linhaDigNum.toString();
+                    ArquivoBoleto.adicionarBoleto(new Boleto(3000, vencimento,
+                            "Tijucas Open", "Banco do Brasil", linhaDig,
+                            novoContrato), novoContrato.getContratoId());
+                }
+                boletos = ArquivoBoleto.lerLista(novoContrato.getContratoId());
+                novoContrato.setBoletos(boletos);
+                ArquivoContrato.atualizarContrato(novoContrato);
+
                 contratosObservable.add(novoContrato);
 
-                txtNomeEmpresa.clear();
+                locatarioComboBox.setValue(null);
                 datePickerInicio.setValue(null);
                 txtValorMensal.clear();
                 checkStatus.setSelected(true);
-                exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Contrato cadastrado com sucesso!");
+                Alerts.alertInfo("Sucesso", "Contrato cadastrado com sucesso!");
 
             } catch (NumberFormatException ex) {
-                exibirAlerta(Alert.AlertType.ERROR, "Erro de Formato", "IDs e Valor Mensal devem ser números válidos.");
+                Alerts.alertError("Erro de Formato", "IDs " +
+                        "e Valor Mensal devem ser números válidos.");
             } catch (IllegalArgumentException ex) {
-                exibirAlerta(Alert.AlertType.ERROR, "Erro de Validação", ex.getMessage());
+                Alerts.alertError("Erro de Validação", ex.getMessage());
             }
         });
 
         btnRemover.setOnAction(e -> {
             Contrato contratoSelecionado = contratoTable.getSelectionModel().getSelectedItem();
             if (contratoSelecionado == null) {
-                exibirAlerta(Alert.AlertType.WARNING, "Nenhuma Seleção", "Por favor, selecione um contrato na tabela para remover.");
+                Alerts.alertWarning("Nenhuma Seleção", "Por favor, selecione um " +
+                        "contrato na " +
+                        "tabela para remover.");
                 return;
             }
 
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, "Tem certeza que deseja remover o contrato selecionado?", ButtonType.YES, ButtonType.NO);
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
-                    ArquivoContrato.removerContrato(contratoSelecionado); // Supondo que Contrato tenha um getId()
+                    ArquivoContrato.removerContrato(
+                            contratoSelecionado.getContratoId()); // Supondo que
                     contratosObservable.remove(contratoSelecionado);
                     exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Contrato removido com sucesso!");
                 }
             });
         });
 
+        btnVerBoletos.setOnAction(e -> {
+            try {
+                Contrato contratoSelecionado =
+                        contratoTable.getSelectionModel().getSelectedItem();
+                if (contratoSelecionado != null) {
+                    new BoletoView(stage, contratoSelecionado).mostrar();
+                } else {
+                    Alerts.alertWarning("Nenhuma seleção",
+                            "Por favor, selecione um " +
+                                    "contrato na " +
+                                    "tabela para ver boletos.");
+                }
+            } catch (NullPointerException ex){
+                Alerts.alertError("Erro",
+                        "Nenhum contrato selecionado. Erro: " + ex.getMessage());
+            }
+        });
 
         Scene cena = new Scene(borderPane, 900, 600);
         this.stage.setScene(cena);
     }
 
-
+    /**
+     * Helper para criar a tabela de contratos, mantendo o código organizado.
+     */
     private TableView<Contrato> criarTabelaContratos() {
         TableView<Contrato> table = new TableView<>();
         table.setItems(contratosObservable);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Contrato, String> colNomeEmpresa = new TableColumn<>("Nome Empresa");
-        colNomeEmpresa.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNomeLocatario()));
+        colNomeEmpresa.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getlocatario().getLocatarioNome()));
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         TableColumn<Contrato, String> colDataInicio = new TableColumn<>("Data de Início");
-        colDataInicio.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getDataInicio().toString()));
+        colDataInicio.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getDataInicio().format(formatter)));
 
         TableColumn<Contrato, String> colValor = new TableColumn<>("Valor Mensal");
         colValor.setCellValueFactory(cell -> new SimpleStringProperty(String.format("R$ %.2f", cell.getValue().getValorMensal())));
@@ -190,7 +249,6 @@ public class ContratoView {
         return table;
     }
 
-
     private HBox criarMenuNavegacao() {
         HBox navBar = new HBox(15);
         navBar.setStyle("-fx-padding: 10; -fx-alignment: center; -fx-background-color: lightgrey;");
@@ -208,10 +266,6 @@ public class ContratoView {
         btnContratos.setStyle(styleBtn);
         btnContratos.setOnAction(e -> this.mostrar()); // Recarrega a tela atual
 
-        Button btnBoletos = new Button("Boletos");
-        btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
@@ -221,12 +275,9 @@ public class ContratoView {
         btnEspacos.setStyle(styleBtn);
         btnEspacos.setOnAction(e -> new EspacoView(stage).mostrar());
 
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos,
-                btnBoletos, btnLojas, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;
     }
-
-
 
     private void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
         Alert alerta = new Alert(tipo);
