@@ -181,7 +181,7 @@ public class ContratoView {
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
                     ArquivoContrato.removerContrato(
-                            contratoSelecionado.getContratoId()); // Supondo que
+                            contratoSelecionado.getContratoId());
                     contratosObservable.remove(contratoSelecionado);
                     exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Contrato removido com sucesso!");
                 }
@@ -210,9 +210,6 @@ public class ContratoView {
         this.stage.setScene(cena);
     }
 
-    /**
-     * Helper para criar a tabela de contratos, mantendo o código organizado.
-     */
     private TableView<Contrato> criarTabelaContratos() {
         TableView<Contrato> table = new TableView<>();
         table.setItems(contratosObservable);

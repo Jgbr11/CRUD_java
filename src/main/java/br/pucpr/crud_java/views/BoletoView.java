@@ -149,11 +149,15 @@ public class BoletoView {
                 if (boletoSelecionado != null) {
                     int numeroDocumento =
                             boletoSelecionado.getNumeroDocumento();
-                    Alerts.alertConfirm("Tem certeza?", "Tem certeza que quer" +
-                            " excluir o boleto" + boletoSelecionado.getLinhaDigitavel() + "?");
-                    ArquivoBoleto.removerBoleto(numeroDocumento, contrato.getContratoId());
-                    boletosObservable.remove(boletoSelecionado);
-                    Alerts.alertInfo("Sucesso", "Boleto apagado com sucesso!");
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, "Tem certeza que deseja remover o boleto selecionado?", ButtonType.YES, ButtonType.NO);
+                    confirmacao.showAndWait().ifPresent(resposta -> {
+                        if (resposta == ButtonType.YES) {
+                            ArquivoBoleto.removerBoleto(
+                                    boletoSelecionado.getNumeroDocumento(), boletoSelecionado.getContrato().getContratoId());
+                            boletosObservable.remove(boletoSelecionado);
+                            exibirAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Boleto removido com sucesso!");
+                        }
+                    });
                 } else {
                     Alerts.alertError("Erro", "Selecione um boleto para " +
                             "apagar");
@@ -258,5 +262,22 @@ public class BoletoView {
                 btnLojas, btnEspacos);
         return navBar;
     }
+
+    private void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(conteudo);
+        alerta.showAndWait();
+    }
+
+
+
+
+
+
+
+
+
 
 }
