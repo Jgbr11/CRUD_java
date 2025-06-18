@@ -191,10 +191,6 @@ public class LojaView {
         btnContratos.setStyle(styleBtn);
         btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
 
-        Button btnBoletos = new Button("Boletos");
-        btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> this.mostrar());
@@ -205,7 +201,7 @@ public class LojaView {
 
 
 
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;
     }
 

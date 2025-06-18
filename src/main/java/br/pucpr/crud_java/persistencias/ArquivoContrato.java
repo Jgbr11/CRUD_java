@@ -7,6 +7,39 @@ import java.util.ArrayList;
 
 public class ArquivoContrato {
     private static final String CAMINHO_ARQUIVO = "contratos.dat";
+    private static final String PROXIMO_ID_CAMINHO = "proximoId_contrato.dat";
+
+    private static int lerProximoId(){
+        try {
+            File arquivoId = new File(PROXIMO_ID_CAMINHO);
+            if (arquivoId.exists()){
+                DataInputStream dis =
+                        new DataInputStream(new FileInputStream(arquivoId));
+                return dis.readInt();
+            }
+            return 1;
+        } catch (IOException e){
+            System.err.println("Erro ao ler " + PROXIMO_ID_CAMINHO + ", " +
+                    "reiniciando contador. Erro: " + e.getMessage());
+            return 1;
+        }
+    }
+
+    private static void salvarProximoId(int id){
+        try {
+            File arquivoId = new File(PROXIMO_ID_CAMINHO);
+            if (!arquivoId.exists()){
+                arquivoId.createNewFile();
+            }
+            DataOutputStream dos =
+                    new DataOutputStream(new FileOutputStream(arquivoId));
+            dos.writeInt(id);
+        } catch (IOException e){
+            System.err.println("Erro ao salvar em " + PROXIMO_ID_CAMINHO + "." +
+                    " Erro: " + e.getMessage());
+        }
+    }
+
     public static void salvarLista(ArrayList<Contrato> contratos){
         try {
             File arquivo = new File(CAMINHO_ARQUIVO);
@@ -46,14 +79,19 @@ public class ArquivoContrato {
 
     public static void adicionarContrato(Contrato novoContrato) {
         ArrayList<Contrato> contratos = lerLista();
+        int novoId = lerProximoId();
+
+        novoContrato.setContratoId(novoId);
         for (Contrato c : contratos) {
-            if (novoContrato.equals(c)) {
+            if (novoContrato.getContratoId() == c.getContratoId()) {
                 System.out.println("ID do contrato já cadastrado. Contrato não adicionado.");
                 return;
             }
         }
         contratos.add(novoContrato);
         salvarLista(contratos);
+
+        salvarProximoId(novoId + 1);
     }
 
     public static Contrato buscarContratoPorId(Contrato contrato) {
@@ -66,17 +104,34 @@ public class ArquivoContrato {
         return null;
     }
 
-    public static void removerContrato(Contrato contrato){
+    public static void removerContrato(int contratoId){
         ArrayList<Contrato> contratos = lerLista();
-
+        boolean removido = false;
         for (Contrato c : contratos){
-            if (contrato.equals(c)) {
-                contratos.remove(contrato);
-                salvarLista(contratos);
-            } else {
-                System.out.println("Contrato não existe!");
+            if (c.getContratoId() == contratoId) {
+                contratos.remove(c);
+                removido = true;
+                break;
             }
         }
+        if (removido){
+            salvarLista(contratos);
+            System.out.println("Contrato removido com sucesso!");
+        } else {
+            System.err.println("Contrato não encontrado. Nenhuma remoção foi " +
+                    "feita");
+        }
+    }
+
+    public static void atualizarContrato(Contrato contratoAtualizado) {
+        ArrayList<Contrato> contratos = lerLista();
+        for (int i = 0; i < contratos.size(); i++) {
+            if (contratos.get(i).getContratoId() == contratoAtualizado.getContratoId()) {
+                contratos.set(i, contratoAtualizado);
+                break;
+            }
+        }
+        salvarLista(contratos);
     }
 
 }

@@ -8,21 +8,23 @@ public class Boleto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private long numeroDocumento;
+    private int numeroDocumento;
     private double valor;
     private LocalDate vencimento;
     private String cedente;
     private String banco;
     private String linhaDigitavel;
+    private Contrato contrato;
 
-    public Boleto(long numeroDocumento, double valor, LocalDate vencimento,
-                  String cedente, String banco, String linhaDigitavel) {
-        this.numeroDocumento = numeroDocumento;
+    public Boleto(double valor, LocalDate vencimento,
+                  String cedente, String banco, String linhaDigitavel,
+                  Contrato contrato) {
         this.valor = valor;
         this.vencimento = vencimento;
         this.cedente = cedente;
         this.banco = banco;
         this.linhaDigitavel = linhaDigitavel;
+        this.contrato = contrato;
     }
 
     @Override
@@ -36,11 +38,11 @@ public class Boleto implements Serializable {
                 "\n";
     }
 
-    public long getNumeroDocumento() {
+    public int getNumeroDocumento() {
         return numeroDocumento;
     }
 
-    public void setNumeroDocumento(long numeroDocumento) {
+    public void setNumeroDocumento(int numeroDocumento) {
         this.numeroDocumento = numeroDocumento;
     }
 
@@ -82,5 +84,13 @@ public class Boleto implements Serializable {
 
     public void setLinhaDigitavel(String linhaDigitavel) {
         this.linhaDigitavel = linhaDigitavel;
+    }
+
+    public Contrato getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(Contrato contrato) {
+        this.contrato = contrato;
     }
 }
