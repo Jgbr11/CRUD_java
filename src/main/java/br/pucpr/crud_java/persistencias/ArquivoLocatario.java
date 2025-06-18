@@ -43,27 +43,28 @@ public class ArquivoLocatario {
     }
 
 
-    public static void adicionarLocatario(Locatario novoLocatario) {
+    public static boolean adicionarLocatario(Locatario novoLocatario) {
         ArrayList<Locatario> locatarios = lerLista();
 
         for (Locatario loc : locatarios) {
-            if (loc.getLocatario_cnpj().equals(novoLocatario.getLocatario_cnpj())) {
+            if (loc.getLocatarioCnpj().equals(novoLocatario.getLocatarioCnpj())) {
                 System.out.println("CNPJ já cadastrado. Locatário não adicionado.");
-                return;
+                return false;
             }
         }
 
         locatarios.add(novoLocatario);
         salvarLista(locatarios);
+        return true;
     }
 
-    public static void editarLocatario(String cnpj, String novo_nome, String novo_email, String novo_telefone) {
+    public static void editarLocatario(String cnpj, String novoNome, String novoEmail, String novoTelefone) {
         ArrayList<Locatario> locatarios = lerLista();
         for (Locatario loc : locatarios) {
-            if (cnpj != null && cnpj.equals(loc.getLocatario_cnpj())) {
-                loc.setLocatario_nome(novo_nome);
-                loc.setLocatario_telefone(novo_telefone);
-                loc.setLocatario_email(novo_email);
+            if (cnpj != null && cnpj.equals(loc.getLocatarioCnpj())) {
+                loc.setLocatarioNome(novoNome);
+                loc.setLocatarioEmail(novoEmail);
+                loc.setLocatarioTelefone(novoTelefone);
                 salvarLista(locatarios);
                 System.out.println("Locatário atualizado com sucesso!");
                 return;
@@ -78,7 +79,7 @@ public class ArquivoLocatario {
         boolean removido = false;
 
         for (Locatario loc : locatarios) {
-            if (cnpj != null && cnpj.equals(loc.getLocatario_cnpj())) {
+            if (cnpj != null && cnpj.equals(loc.getLocatarioCnpj())) {
                 locatarios.remove(loc);
                 removido = true;
                 break;

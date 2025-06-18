@@ -8,56 +8,47 @@ public class Locatario implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String locatario_cnpj;
-    private String locatario_nome;
-    private String locatario_telefone;
-    private String locatario_email;
+    private String locatarioCnpj;
+    private String locatarioNome;
+    private String locatarioTelefone;
+    private String locatarioEmail;
 
     public Locatario(String cnpj, String nome, String email, String telefone) {
-        locatario_cnpj = cnpj;
-        locatario_nome = nome;
-        locatario_telefone = telefone;
-        locatario_email = email;
+        locatarioCnpj = cnpj;
+        locatarioNome = nome;
+        locatarioEmail = email;
+        locatarioTelefone = telefone;
     }
 
-    @Override
-    public String toString() {
-        return "Nome: " + this.locatario_nome +
-                "\nCNPJ: " + this.locatario_cnpj +
-                "\nEmail: " + this.locatario_email +
-                "\nTelefone: " + this.locatario_telefone + "\n";
+    public String getLocatarioCnpj() {
+        return locatarioCnpj;
     }
 
-
-    public String getLocatario_cnpj() {
-        return locatario_cnpj;
+    public void setLocatarioCnpj(String locatarioCnpj) {
+        this.locatarioCnpj = locatarioCnpj;
     }
 
-    public void setLocatario_cnpj(String locatario_cnpj) {
-        this.locatario_cnpj = locatario_cnpj;
+    public String getLocatarioNome() {
+        return locatarioNome;
     }
 
-    public String getLocatario_nome() {
-        return locatario_nome;
+    public void setLocatarioNome(String locatarioNome) {
+        this.locatarioNome = locatarioNome;
     }
 
-    public void setLocatario_nome(String locatario_nome) {
-        this.locatario_nome = locatario_nome;
+    public String getLocatarioTelefone() {
+        return locatarioTelefone;
     }
 
-    public String getLocatario_telefone() {
-        return locatario_telefone;
+    public void setLocatarioTelefone(String locatarioTelefone) {
+        this.locatarioTelefone = locatarioTelefone;
     }
 
-    public void setLocatario_telefone(String locatario_telefone) {
-        this.locatario_telefone = locatario_telefone;
+    public String getLocatarioEmail() {
+        return locatarioEmail;
     }
 
-    public String getLocatario_email() {
-        return locatario_email;
-    }
-
-    public void setLocatario_email(String locatario_email) {
-        this.locatario_email = locatario_email;
+    public void setLocatarioEmail(String locatarioEmail) {
+        this.locatarioEmail = locatarioEmail;
     }
 }
