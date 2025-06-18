@@ -3,6 +3,7 @@ package br.pucpr.crud_java.views;
 import br.pucpr.crud_java.TelaInicial;
 import br.pucpr.crud_java.alerts.Alerts;
 import br.pucpr.crud_java.models.Espaco;
+import br.pucpr.crud_java.persistencias.ArquivoContrato;
 import br.pucpr.crud_java.persistencias.ArquivoEspaco;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -53,7 +54,13 @@ public class EspacoView {
         Button btnCad = new Button("Cadastrar Espaço");
         btnCad.setMaxWidth(Double.MAX_VALUE);
 
-        painelFormulario.getChildren().addAll(labelArea, txtArea, labelPiso, txtPiso, btnCad);
+        Button btnAtualizar = new Button("Atualizar página");
+        btnAtualizar.setMaxWidth(Double.MAX_VALUE);
+        btnAtualizar.setOnAction(e -> {
+            espacosObservable.setAll(ArquivoEspaco.lerLista());
+        });
+
+        painelFormulario.getChildren().addAll(labelArea, txtArea, labelPiso, txtPiso, btnCad, btnAtualizar);
         borderPane.setLeft(painelFormulario);
 
         VBox painelTabela = new VBox(10);

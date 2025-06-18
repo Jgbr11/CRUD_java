@@ -3,6 +3,7 @@ package br.pucpr.crud_java.views;
 import br.pucpr.crud_java.TelaInicial;
 import br.pucpr.crud_java.alerts.Alerts;
 import br.pucpr.crud_java.models.Locatario;
+import br.pucpr.crud_java.persistencias.ArquivoContrato;
 import br.pucpr.crud_java.persistencias.ArquivoLocatario;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -64,7 +65,13 @@ public class LocatarioView {
         Button btnCadastrar = new Button("Cadastrar Locatário");
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
-        painelFormulario.getChildren().addAll(labelCNPJ, txtCNPJ, labelNome, txtNome, labelEmail, txtEmail, labelTelefone, txtTelefone, btnCadastrar);
+        Button btnAtualizar = new Button("Atualizar página");
+        btnAtualizar.setMaxWidth(Double.MAX_VALUE);
+        btnAtualizar.setOnAction(e -> {
+            locatariosObservable.setAll(ArquivoLocatario.lerLista());
+        });
+
+        painelFormulario.getChildren().addAll(labelCNPJ, txtCNPJ, labelNome, txtNome, labelEmail, txtEmail, labelTelefone, txtTelefone, btnCadastrar, btnAtualizar);
         borderPane.setLeft(painelFormulario);
 
         VBox painelTabela = new VBox(10);

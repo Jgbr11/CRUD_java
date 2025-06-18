@@ -128,11 +128,17 @@ public class BoletoView {
             new ContratoView(stage).mostrar();
         });
 
+        Button btnAtualizar = new Button("Atualizar página");
+        btnAtualizar.setMaxWidth(Double.MAX_VALUE);
+        btnAtualizar.setOnAction(e -> {
+            boletosObservable.setAll(ArquivoBoleto.lerLista(contrato.getContratoId()));
+        });
+
 
         painelFormulario.getChildren().addAll(labelVal, txtVal,
                 labelDataVenc, datePickerVenc, labelCedente,
                 txtCedente, labelBanco, txtBanco, labelLinhaDig, txtLinhaDig,
-                btnCad, btnVoltar);
+                btnCad, btnVoltar, btnAtualizar);
 
         borderPane.setLeft(painelFormulario);
 
@@ -269,6 +275,11 @@ public class BoletoView {
         alerta.setHeaderText(null);
         alerta.setContentText(conteudo);
         alerta.showAndWait();
+    }
+
+    private void atualizarTabelaBoletos() {
+        boletosObservable.setAll(ArquivoBoleto.lerLista(contrato.getContratoId()));
+        // A TableView se atualizará automaticamente pois está vinculada (bound) a boletosObservable
     }
 
 

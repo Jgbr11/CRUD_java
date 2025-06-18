@@ -92,12 +92,18 @@ public class ContratoView {
         Button btnCadastrar = new Button("Cadastrar Contrato");
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
+        Button btnAtualizar = new Button("Atualizar página");
+        btnAtualizar.setMaxWidth(Double.MAX_VALUE);
+        btnAtualizar.setOnAction(e -> {
+            contratosObservable.setAll(ArquivoContrato.lerLista());
+        });
+
         painelFormulario.getChildren().addAll(
                 labelNomeEmpresa, locatarioComboBox,
                 labelDataInicio, datePickerInicio,
                 labelValorMensal, txtValorMensal,
                 labelStatus, checkStatus,
-                btnCadastrar
+                btnCadastrar, btnAtualizar
         );
         borderPane.setLeft(painelFormulario);
 

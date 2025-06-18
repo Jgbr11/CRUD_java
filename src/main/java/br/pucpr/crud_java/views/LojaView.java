@@ -5,6 +5,7 @@ import br.pucpr.crud_java.alerts.Alerts;
 import br.pucpr.crud_java.models.Boleto;
 import br.pucpr.crud_java.models.Loja;
 import br.pucpr.crud_java.persistencias.ArquivoBoleto;
+import br.pucpr.crud_java.persistencias.ArquivoContrato;
 import br.pucpr.crud_java.persistencias.ArquivoLoja;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -63,7 +64,13 @@ public class LojaView {
         Button btnCadastrar = new Button("Cadastrar Loja");
         btnCadastrar.setMaxWidth(Double.MAX_VALUE);
 
-        painelFormulario.getChildren().addAll(labelNome, txtNome, labelTelefone, txtTelefone, labelTipo, cbTipo, btnCadastrar);
+        Button btnAtualizar = new Button("Atualizar página");
+        btnAtualizar.setMaxWidth(Double.MAX_VALUE);
+        btnAtualizar.setOnAction(e -> {
+            lojasObservable.setAll(ArquivoLoja.lerLista());
+        });
+
+        painelFormulario.getChildren().addAll(labelNome, txtNome, labelTelefone, txtTelefone, labelTipo, cbTipo, btnCadastrar, btnAtualizar);
         borderPane.setLeft(painelFormulario);
 
 
