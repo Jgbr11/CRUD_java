@@ -5,23 +5,18 @@ import br.pucpr.crud_java.models.Locatario;
 import br.pucpr.crud_java.persistencias.ArquivoLocatario;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.time.LocalDate;
 
 public class ModalLocatarioEdit {
     private Stage stage;
     private Scene cena;
     private Locatario locatario;
 
-    private Stage stageOwner;
-
-    public ModalLocatarioEdit(Stage stageOwner, Locatario locatario){
-        this.stageOwner = stageOwner;
+    public ModalLocatarioEdit(Locatario locatario){
         this.locatario = locatario;
     }
 
@@ -30,7 +25,7 @@ public class ModalLocatarioEdit {
         stage.showAndWait();
     }
 
-    public void criarUI() {
+    private void criarUI() {
         this.stage = new Stage();
         Button btnVoltar = new Button("Voltar");
         btnVoltar.setOnAction(e -> {
@@ -46,21 +41,20 @@ public class ModalLocatarioEdit {
 
 
         Label labelCNPJ = new Label("CNPJ da Empresa");
-        TextField txtCNPJ = new TextField(String.valueOf(locatario.getLocatario_cnpj()));
+        TextField txtCNPJ = new TextField(String.valueOf(locatario.getLocatarioCnpj()));
         txtCNPJ.setPromptText("Digite o CNPJ");
         txtCNPJ.setEditable(false);
 
         Label labelNome = new Label("Nome da Empresa");
-        TextField txtNome = new TextField(String.valueOf(locatario.getLocatario_nome()));
+        TextField txtNome = new TextField(String.valueOf(locatario.getLocatarioNome()));
         txtNome.setPromptText("Digite o nome da Empresa");
-        txtNome.setEditable(false);
 
         Label labelEmail = new Label("Email");
-        TextField txtEmail = new TextField(String.valueOf(locatario.getLocatario_email()));
+        TextField txtEmail = new TextField(String.valueOf(locatario.getLocatarioEmail()));
         txtEmail.setPromptText("Digite o email da Empresa");
 
         Label labelTelefone = new Label("Telefone");
-        TextField txtTelefone = new TextField(String.valueOf(locatario.getLocatario_telefone()));
+        TextField txtTelefone = new TextField(String.valueOf(locatario.getLocatarioTelefone()));
         txtTelefone.setPromptText("(XX) XXXXX-XXXX");
         adicionarMascaraTelefone(txtTelefone);
 

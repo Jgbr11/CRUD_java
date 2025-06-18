@@ -65,10 +65,6 @@ public class TelaInicial {
         btnContratos.setStyle(styleBtn);
         btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
 
-        Button btnBoletos = new Button("Boletos");
-        btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
@@ -77,7 +73,7 @@ public class TelaInicial {
         btnEspacos.setStyle(styleBtn);
         btnEspacos.setOnAction(e -> new EspacoView(stage).mostrar());
 
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;
     }
 }

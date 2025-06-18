@@ -157,10 +157,6 @@ public class EspacoView {
         btnContratos.setStyle(styleBtn);
         btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
 
-        Button btnBoletos = new Button("Boletos");
-        btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
@@ -168,7 +164,7 @@ public class EspacoView {
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
         btnEspacos.setOnAction(e -> this.mostrar());
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnBoletos, btnLojas, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;
     }
 }

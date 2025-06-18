@@ -13,7 +13,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.ArrayList;
 
 public class LocatarioView {
     private Stage stage;
@@ -76,10 +75,44 @@ public class LocatarioView {
 
         btnCadastrar.setOnAction(e -> {
             try {
-                Locatario novoLocatario = new Locatario(txtCNPJ.getText(), txtNome.getText(), txtEmail.getText(), txtTelefone.getText());
-                ArquivoLocatario.adicionarLocatario(novoLocatario);
-                locatariosObservable.add(novoLocatario);
-                txtCNPJ.clear(); txtNome.clear(); txtEmail.clear(); txtTelefone.clear();
+                String cnpj = txtCNPJ.getText();
+                String telefone = txtTelefone.getText();
+                String email = txtEmail.getText();
+                String nome = txtNome.getText();
+
+                if (cnpj.isEmpty() || cnpj.length() < 18) {
+                    Alerts.alertError("Erro de Validação", "O CNPJ deve ser preenchido completamente.");
+                    return;
+                }
+
+                if (nome.isEmpty()) {
+                    Alerts.alertError("Erro de Validação", "O Nome da empresa não pode ser vazio.");
+                    return;
+                }
+
+                if (email.isEmpty() || !email.contains("@")) {
+                    Alerts.alertError("Erro de Validação", "Insira um e-mail válido");
+                    return;
+                }
+
+                if (telefone.isEmpty() || telefone.length() < 14) {
+                    Alerts.alertError("Erro de Validação", "O Telefone deve ser preenchido completamente.");
+                    return;
+                }
+
+                Locatario novoLocatario = new Locatario(cnpj, nome, email, telefone);
+
+                if (ArquivoLocatario.adicionarLocatario(novoLocatario)) {
+                    locatariosObservable.add(novoLocatario);
+                    txtCNPJ.clear();
+                    txtNome.clear();
+                    txtEmail.clear();
+                    txtTelefone.clear();
+                    Alerts.alertInfo("Sucesso", "Locatário cadastrado com sucesso!");
+                } else {
+                    Alerts.alertError("Erro", "CNPJ já cadastrado. Locatário não adicionado.");
+                    txtCNPJ.clear();
+                }
             } catch (Exception ex) {
             }
         });
@@ -87,7 +120,7 @@ public class LocatarioView {
         btnRemover.setOnAction(e -> {
             Locatario locatarioSelecionado = locatarioTable.getSelectionModel().getSelectedItem();
             if (locatarioSelecionado != null) {
-                ArquivoLocatario.removerLocatario(locatarioSelecionado.getLocatario_cnpj());
+                ArquivoLocatario.removerLocatario(locatarioSelecionado.getLocatarioCnpj());
                 locatariosObservable.remove(locatarioSelecionado);
                 Alerts.alertInfo("Removido","Locatário removido com sucesso");
             } else {
@@ -101,7 +134,7 @@ public class LocatarioView {
                 Locatario locatarioSelecionado =
                         locatarioTable.getSelectionModel().getSelectedItem();
                 if (locatarioSelecionado != null){
-                    new ModalLocatarioEdit(stage, locatarioSelecionado).mostrar();
+                    new ModalLocatarioEdit(locatarioSelecionado).mostrar();
                     locatariosObservable.setAll(ArquivoLocatario.lerLista());
                 } else {
                     Alerts.alertError("Erro", "Selecione um locatário para " +
@@ -124,16 +157,16 @@ public class LocatarioView {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Locatario, String> colCNPJ = new TableColumn<>("CNPJ");
-        colCNPJ.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_cnpj()));
+        colCNPJ.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatarioCnpj()));
 
         TableColumn<Locatario, String> colNome = new TableColumn<>("Nome");
-        colNome.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_nome()));
+        colNome.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatarioNome()));
 
         TableColumn<Locatario, String> colEmail = new TableColumn<>("Email");
-        colEmail.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_email()));
+        colEmail.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatarioEmail()));
 
         TableColumn<Locatario, String> colTelefone = new TableColumn<>("Telefone");
-        colTelefone.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatario_telefone()));
+        colTelefone.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLocatarioTelefone()));
 
         table.getColumns().addAll(colCNPJ, colNome, colEmail, colTelefone);
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -159,21 +192,16 @@ public class LocatarioView {
         btnContratos.setStyle(styleBtn);
         btnContratos.setOnAction(e -> new ContratoView(stage).mostrar());
 
-        Button btnBoletos = new Button("Boletos");
-        btnBoletos.setStyle(styleBtn);
-        btnBoletos.setOnAction(e -> new BoletoView(stage).mostrar());
-
         Button btnLojas = new Button("Lojas");
         btnLojas.setStyle(styleBtn);
-
         btnLojas.setOnAction(e -> new LojaView(stage).mostrar());
+
         Button btnEspacos = new Button("Espaços");
         btnEspacos.setStyle(styleBtn);
         btnEspacos.setOnAction(e -> new EspacoView(stage).mostrar());
 
 
-        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos,
-         btnBoletos, btnLojas, btnEspacos);
+        navBar.getChildren().addAll(btnHome, btnLocatarios, btnContratos, btnLojas, btnEspacos);
         return navBar;
     }
 
