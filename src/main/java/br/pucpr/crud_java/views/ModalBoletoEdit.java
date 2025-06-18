@@ -65,7 +65,6 @@ public class ModalBoletoEdit {
         Label labelLinhaDig = new Label("Linha digitável");
         TextField txtLinhaDig = new TextField(boleto.getLinhaDigitavel());
         txtLinhaDig.setPromptText("Preencha a linha digitável");
-
         txtLinhaDig.textProperty().addListener((obs, oldText, newText) -> {
             if(!newText.matches("\\d{0,13}")) {
                 txtLinhaDig.setText(oldText);

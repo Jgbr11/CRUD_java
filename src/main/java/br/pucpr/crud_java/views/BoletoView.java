@@ -82,6 +82,11 @@ public class BoletoView {
         Label labelLinhaDig = new Label("Linha digitável");
         TextField txtLinhaDig = new TextField();
         txtLinhaDig.setPromptText("Preencha a linha digitável");
+        txtLinhaDig.textProperty().addListener((obs, oldText, newText) -> {
+            if(!newText.matches("\\d{0,13}")) {
+                txtLinhaDig.setText(oldText);
+            }
+        });
 
 
         Button btnCad = new Button("Cadastrar");
@@ -95,7 +100,8 @@ public class BoletoView {
                         String linhaDig = txtLinhaDig.getText();
 
                         if (valor >= 0 && vencimento != null &&
-                                !linhaDig.isEmpty() && contrato != null) {
+                                !linhaDig.isEmpty() && linhaDig.matches("\\d" +
+                                "{1,13}") && contrato != null) {
 
                             Boleto novoBoleto =
                                     new Boleto(valor, vencimento, cedente,
