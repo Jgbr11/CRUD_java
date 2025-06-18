@@ -85,6 +85,7 @@ public class ArquivoLoja {
         lojaParaEditar.setLojaNome(novoNome);
         lojaParaEditar.setLojaTelefone(novoTelefone);
         lojaParaEditar.setLojaTipo(novoTipo);
+        salvarLista(lojas);
     }
 
 
