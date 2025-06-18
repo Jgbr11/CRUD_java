@@ -41,6 +41,7 @@ public class ModalLojaEdit {
         Label labelTel = new Label("Telefone:");
         TextField txtTel = new TextField(loja.getLojaTelefone());
         txtTel.setPromptText("Telefone");
+        adicionarMascaraTelefone(txtTel);
 
         Label labelTipo = new Label("Tipo da Loja:");
         ComboBox<String> cbTipo = new ComboBox<>();
@@ -87,5 +88,24 @@ public class ModalLojaEdit {
 
         Scene cena = new Scene(camposLoja, 400, 350);
         this.stage.setScene(cena);
+    }
+
+
+
+    private void adicionarMascaraTelefone(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String digitos = newValue.replaceAll("\\D", "");
+            if (digitos.length() > 11) digitos = digitos.substring(0, 11);
+
+            String textoFormatado = digitos;
+            if (digitos.length() > 2) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2);
+            if (digitos.length() > 7) textoFormatado = "(" + digitos.substring(0, 2) + ") " + digitos.substring(2, 7) + "-" + digitos.substring(7);
+
+
+            if (!newValue.equals(textoFormatado)) {
+                textField.setText(textoFormatado);
+                textField.positionCaret(textoFormatado.length());
+            }
+        });
     }
 }
