@@ -8,9 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class ModalEspacoEdit {
 
@@ -43,6 +46,16 @@ public class ModalEspacoEdit {
         Label labelArea = new Label("Área do espaço (m²)");
         TextField txtArea = new TextField(String.format("%.2f", espaco.getArea()));
         txtArea.setPromptText("Digite a nova área");
+        Pattern pattern = Pattern.compile("\\d*([,.]\\d{0,2})?");
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            if (pattern.matcher(change.getControlNewText()).matches()) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> formatter = new TextFormatter<>(filter);
+        txtArea.setTextFormatter(formatter);
+
 
         Label labelPiso = new Label("Piso do espaço (1 ou 2)");
         TextField txtPiso = new TextField(String.valueOf(espaco.getPiso()));

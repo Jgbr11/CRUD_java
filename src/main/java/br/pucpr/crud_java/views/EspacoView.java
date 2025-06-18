@@ -14,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -46,6 +48,15 @@ public class EspacoView {
         Label labelArea = new Label("Área do espaço (m²)");
         TextField txtArea = new TextField();
         txtArea.setPromptText("Digite a área do espaço");
+        Pattern pattern = Pattern.compile("\\d*([,.]\\d{0,2})?");
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            if (pattern.matcher(change.getControlNewText()).matches()) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> formatter = new TextFormatter<>(filter);
+        txtArea.setTextFormatter(formatter);
 
         Label labelPiso = new Label("Piso do espaço (1 ou 2)");
         TextField txtPiso = new TextField();
