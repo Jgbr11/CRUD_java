@@ -66,6 +66,12 @@ public class ModalBoletoEdit {
         TextField txtLinhaDig = new TextField(boleto.getLinhaDigitavel());
         txtLinhaDig.setPromptText("Preencha a linha digitável");
 
+        txtLinhaDig.textProperty().addListener((obs, oldText, newText) -> {
+            if(!newText.matches("\\d{0,13}")) {
+                txtLinhaDig.setText(oldText);
+            }
+        });
+
         Button btnEditar = new Button("Salvar alterações");
         btnEditar.setOnAction(e -> {
                     try {
@@ -77,7 +83,7 @@ public class ModalBoletoEdit {
                         String linhaDig = txtLinhaDig.getText();
                         if (contrato != null) {
                             if (numDoc >= 0 && valor >= 0 &&
-                                    vencimento != null && linhaDig != "") {
+                                    vencimento != null && !linhaDig.isEmpty() && linhaDig.matches("\\d{1,13}")){
 
                                 ArquivoBoleto.editarBoleto(numDoc, valor,
                                         vencimento, cedente, banco, linhaDig,
